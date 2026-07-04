@@ -7,6 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     
+
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" 
+          integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V"
+          crossorigin="anonymous">
+    </script>
     <script>
         tailwind.config = {
             theme: {
@@ -63,13 +68,13 @@
                 Auditorías de seguridad, pruebas de penetración y respuesta ante incidentes con enfoque ofensivo para defensas inquebrantables.
             </p>
             <div class="flex flex-col md:flex-row gap-4 justify-center">
-                <a href="#contacto" class="px-8 py-3 bg-cyber text-dark font-bold rounded-sm glow uppercase tracking-tighter">Solicitar Auditoría</a>
+                <a href="#servicios" class="px-8 py-3 bg-cyber text-dark font-bold rounded-sm glow uppercase tracking-tighter">Solicitar Auditoría</a>
             </div>
         </div>
     </header>
 
     <section id="sobre-nosotros" class="py-24 px-6 max-w-7xl mx-auto font-sans scroll-mt-20">
-        <div class="mb-16">
+        <div class="mb-8">
             <h3 class="text-cyber font-mono text-sm tracking-widest uppercase mb-2">// QUIÉNES_SOMOS</h3>
             <h2 class="text-4xl font-bold text-white tracking-tight">Nuestra Filosofía Ética</h2>
         </div>
@@ -83,7 +88,7 @@
                 <p>
                     Fundada por veteranos de la seguridad ofensiva, nacimos con la convicción de que las mejores defensas se construyen pensando como el atacante más sofisticado. Nuestra agilidad y enfoque dedicado nos permiten descubrir vulnerabilidades que los análisis automatizados masivos pasan por alto.
                 </p>
-                <div class="pt-4 border-l-2 border-cyber pl-4 font-mono text-terminal text-sm bg-terminal/5 py-2 rounded">
+                <div class="pt-3 border-l-2 border-cyber pl-4 font-mono text-terminal text-sm bg-terminal/5 py-3 rounded">
                     > OPERADOR: ELITE_UNIT<br>
                     > CERTIFICACIONES: OSCP, CISSP, CEH<br>
                     > ÉTICA: 100% GARANTIZADA
@@ -178,47 +183,143 @@
     </section>
 
     <section id="servicios" class="py-24 px-6 max-w-7xl mx-auto scroll-mt-20">
-        <div class="mb-16">
+        <div class="mb-8">
             <h3 class="text-cyber font-mono text-sm mb-2">// CAPACIDADES_EXTENDIDAS</h3>
             <h2 class="text-4xl font-bold text-white">Nuestros Servicios</h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            
-            <div class="glass p-8 rounded-lg group hover:border-cyber transition">
-                <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 group-hover:bg-cyber group-hover:text-dark transition font-mono text-lg font-bold">01</div>
-                <h4 class="text-xl font-bold text-white mb-4 italic">Pentesting Avanzado</h4>
-                <p class="text-gray-400 text-sm leading-relaxed">Simulación de ataques reales para identificar vulnerabilidades críticas en tu red y aplicaciones web.</p>
+
+            <div class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark">
+                        01
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-6 pl-4">Pentesting Avanzado</h4>
+                </div>
+    
+                <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                    Simulación de ataques reales para identificar vulnerabilidades críticas en tu red y aplicaciones web.
+                </p>
+    
+                <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+                    <span class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
+                    <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
+                        <div class="relative z-10 flex items-center space-x-2">
+                            <span class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white">
+                                Solicitar Auditoría
+                            </span>
+                            <svg class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber" data-slot="icon" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" fill-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                    </span>
+                </a>
+        </div>
+
+            <div class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark">02</div>
+                    <h4 class="text-xl font-bold text-white mb-6 pl-4">Análisis de Código</h4>
+                </div>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6">Revisión profunda de aplicaciones para asegurar que tu software sea seguro desde la primera línea de código.</p>
+                <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+                    <span class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
+                    <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
+                        <div class="relative z-10 flex items-center space-x-2">
+                            <span class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white">
+                                Solicitar Auditoría
+                            </span>
+                            <svg class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber" data-slot="icon" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" fill-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                    </span>
+                </a>
             </div>
 
-            <div class="glass p-8 rounded-lg group hover:border-cyber transition">
-                <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 group-hover:bg-cyber group-hover:text-dark transition font-mono text-lg font-bold">02</div>
-                <h4 class="text-xl font-bold text-white mb-4 italic">Análisis de Código</h4>
-                <p class="text-gray-400 text-sm leading-relaxed">Revisión profunda de aplicaciones para asegurar que tu software sea seguro desde la primera línea de código.</p>
+            <div class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark">03</div>
+                    <h4 class="text-xl font-bold text-white mb-6 pl-4">Respuesta a Incidentes</h4>
+                </div>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6">Si has sido comprometido, nuestro equipo de respuesta rápida mitiga el daño y recupera tus activos.</p>
+                <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+                    <span class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
+                    <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
+                        <div class="relative z-10 flex items-center space-x-2">
+                            <span class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white">
+                                Solicitar Auditoría
+                            </span>
+                            <svg class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber" data-slot="icon" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" fill-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                    </span>
+                </a>
             </div>
 
-            <div class="glass p-8 rounded-lg group hover:border-cyber transition">
-                <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 group-hover:bg-cyber group-hover:text-dark transition font-mono text-lg font-bold">03</div>
-                <h4 class="text-xl font-bold text-white mb-4 italic">Respuesta a Incidentes</h4>
-                <p class="text-gray-400 text-sm leading-relaxed">Si has sido comprometido, nuestro equipo de respuesta rápida mitiga el daño y recupera tus activos.</p>
+            <div class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark">04</div>
+                    <h4 class="text-xl font-bold text-white mb-6 pl-4">Auditoría Wireless</h4>
+                </div>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6">Evaluación de protocolos de cifrado y puntos de acceso para evitar intrusiones a través del perímetro inalámbrico.</p>
+                <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+                    <span class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
+                    <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
+                        <div class="relative z-10 flex items-center space-x-2">
+                            <span class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white">
+                                Solicitar Auditoría
+                            </span>
+                            <svg class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber" data-slot="icon" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" fill-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                    </span>
+                </a>
             </div>
 
-            <div class="glass p-8 rounded-lg group hover:border-cyber transition border-l-2 border-l-transparent hover:border-l-cyber">
-                <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 group-hover:bg-cyber group-hover:text-dark transition font-mono text-lg font-bold">04</div>
-                <h4 class="text-xl font-bold text-white mb-4 italic">Auditoría Wireless</h4>
-                <p class="text-gray-400 text-sm leading-relaxed">Evaluación de protocolos de cifrado y puntos de acceso para evitar intrusiones a través del perímetro inalámbrico.</p>
+            <div class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark">05</div>
+                    <h4 class="text-xl font-bold text-white mb-6 pl-4">Ingeniería Social</h4>
+                </div>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6">Pruebas de concienciación mediante campañas de Phishing controladas para medir el factor humano de seguridad.</p>
+                <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+                    <span class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
+                    <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
+                        <div class="relative z-10 flex items-center space-x-2">
+                            <span class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white">
+                                Solicitar Auditoría
+                            </span>
+                            <svg class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber" data-slot="icon" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" fill-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                    </span>
+                </a>
             </div>
 
-            <div class="glass p-8 rounded-lg group hover:border-cyber transition border-l-2 border-l-transparent hover:border-l-cyber">
-                <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 group-hover:bg-cyber group-hover:text-dark transition font-mono text-lg font-bold">05</div>
-                <h4 class="text-xl font-bold text-white mb-4 italic">Ingeniería Social</h4>
-                <p class="text-gray-400 text-sm leading-relaxed">Pruebas de concienciación mediante campañas de Phishing controladas para medir el factor humano de seguridad.</p>
-            </div>
-
-            <div class="glass p-8 rounded-lg group hover:border-cyber transition border-l-2 border-l-transparent hover:border-l-cyber">
-                <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 group-hover:bg-cyber group-hover:text-dark transition font-mono text-lg font-bold">06</div>
-                <h4 class="text-xl font-bold text-white mb-4 italic">Forense Digital</h4>
-                <p class="text-gray-400 text-sm leading-relaxed">Análisis post-mortem de sistemas comprometidos para identificar el origen, alcance y rastro dejado por atacantes.</p>
+            <div class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark">06</div>
+                    <h4 class="text-xl font-bold text-white mb-6 pl-4">Forense Digital</h4>
+                </div>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6">Análisis post-mortem de sistemas comprometidos para identificar el origen, alcance y rastro dejado por atacantes.</p>
+                <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+                    <span class="absolute inset-0 rounded- bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
+                    <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
+                        <div class="relative z-10 flex items-center space-x-2">
+                            <span class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white">
+                                Solicitar Auditoría
+                            </span>
+                            <svg class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber" data-slot="icon" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" fill-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                    </span>
+                </a>
             </div>
             
         </div>
@@ -290,8 +391,20 @@
                         <label class="block text-xs font-mono text-gray-500 mb-2 uppercase">Mensaje Encriptado</label>
                         <textarea rows="4" class="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-cyber transition" placeholder="Describe brevemente el alcance..."></textarea>
                     </div>
-                    <button type="submit" class="w-full py-4 bg-cyber text-dark font-bold uppercase tracking-widest rounded hover:bg-white transition-all shadow-[0_0_15px_rgba(255,0,0,0.2)]">
-                        Enviar Solicitud
+
+                    <button type="submit" class="w-full relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-[1.02] active:scale-[0.98] group/btn">
+                        <span class="absolute inset-0 rounded-xl bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
+
+                        <span class="relative z-10 block w-full px-6 py-4 rounded-xl bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
+                            <div class="relative z-10 flex items-center justify-center space-x-2">
+                                <span class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white">
+                                    Enviar Solicitud
+                                </span>
+                                <svg class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber" data-slot="icon" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" fill-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </span>
                     </button>
                 </form>
             </div>
