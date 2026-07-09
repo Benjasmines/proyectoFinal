@@ -766,7 +766,7 @@
           <div id="form-respuesta" class="mb-6 font-mono text-xs"></div>
 
           <form
-            hx-post="https://2ywhu6nuy0.execute-api.us-east-1.amazonaws.com/default/contacto"
+            hx-post="${api_url}/default/contacto"
             hx-target="#form-respuesta"
             hx-swap="innerHTML"
             hx-on::after-request="if(event.detail.successful) window.location.href = 'https://cal.com/benjamin-uribe-x4fsna/autoria-biteknite'"
