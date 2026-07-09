@@ -225,3 +225,95 @@ resource "aws_ecs_service" "app" {
 
     tags = { Name = "${var.project_name}-svc" }
 }
+
+resource "aws_appautoscaling_target" "ecs_target" {
+  max_capacity       = 8
+  min_capacity       = 2
+  resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.app.name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
+}
+
+resource "aws_appautoscaling_policy" "ecs_cpu_policy" {
+  name               = "${var.project_name}-cpu-autoscaling"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.ecs_target.resource_id
+  scalable_dimension = aws_appautoscaling_target.ecs_target.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.ecs_target.service_namespace
+
+  target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageCPUUtilization"
+    }
+    target_value = 75.0 # Agrega más contenedores si el CPU supera el 75%
+  }
+}
+
+# 1. Bucket S3 para guardar los datos de contacto
+resource "aws_s3_bucket" "contact_data" {
+  bucket = "${var.project_name}-contactos-${data.aws_caller_identity.current.account_id}"
+}
+
+# 2. Rol IAM para la Lambda
+resource "aws_iam_role" "lambda_exec" {
+  name = "${var.project_name}-lambda-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{ Action = "sts:AssumeRole", Effect = "Allow", Principal = { Service = "lambda.amazonaws.com" } }]
+  })
+}
+
+resource "aws_iam_role_policy" "lambda_s3_policy" {
+  role = aws_iam_role.lambda_exec.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action   = ["s3:PutObject"],
+      Effect   = "Allow",
+      Resource = "${aws_s3_bucket.contact_data.arn}/*"
+    }]
+  })
+}
+
+# 3. Función Lambda (código generado en línea)
+resource "aws_lambda_function" "contact_handler" {
+  function_name    = "${var.project_name}-contacto"
+  role             = aws_iam_role.lambda_exec.arn
+  handler          = "index.lambda_handler"
+  runtime          = "python3.9"
+  filename         = "lambda_function.zip" # Asegúrate de tener este zip o usar data "archive_file"
+
+  environment {
+    variables = { BUCKET_NAME = aws_s3_bucket.contact_data.bucket }
+  }
+}
+
+# 4. API Gateway (HTTP API)
+resource "aws_apigatewayv2_api" "http_api" {
+  name          = "${var.project_name}-api"
+  protocol_type = "HTTP"
+  cors_configuration {
+    allow_origins = ["*"]
+    allow_methods = ["POST", "OPTIONS"]
+    allow_headers = ["content-type"]
+  }
+}
+
+resource "aws_apigatewayv2_integration" "lambda_integration" {
+  api_id           = aws_apigatewayv2_api.http_api.id
+  integration_type = "AWS_PROXY"
+  integration_uri  = aws_lambda_function.contact_handler.invoke_arn
+}
+
+resource "aws_apigatewayv2_route" "post_contacto" {
+  api_id    = aws_apigatewayv2_api.http_api.id
+  route_key = "POST /contacto"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
+}
+
+resource "aws_lambda_permission" "api_gw" {
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.contact_handler.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
+}

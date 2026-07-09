@@ -24,113 +24,77 @@
     <!-- Librería de Timekit.io -->
     <script src="https://cdn.timekit.io/booking-js/v3/booking.min.js"></script>
 </head>
-<body class="min-h-screen bg-gray-950 text-gray-100 py-12 px-4 sm:px-6 lg:px-8 font-sans bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')]">
-
-    <!-- Botón volver (Shimmer adaptado para regresar) -->
-    <div class="max-w-6xl mx-auto mb-8">
-        <a href="index.html" class="inline-flex items-center text-sm font-mono text-gray-400 hover:text-cyber transition-colors">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Volver al inicio
-        </a>
-    </div>
-
-    <!-- Contenedor Principal -->
-    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10">
-        
-        <!-- Columna Izquierda: Información del Servicio -->
-        <div class="lg:col-span-4 space-y-8">
-            <div>
-                <h1 class="text-4xl font-mono uppercase tracking-widest text-white mb-2">Agendar<br><span class="text-cyber">Auditoría</span></h1>
-                <p class="text-gray-400 text-sm mt-4">Selecciona una fecha y hora disponible en nuestro calendario para coordinar tu evaluación de seguridad.</p>
-            </div>
-
-            <!-- Resumen Visual -->
-            <div class="border border-white/10 bg-gray-900/80 backdrop-blur-md rounded-xl p-6 shadow-2xl">
-                <h2 class="text-sm font-mono uppercase tracking-wider text-white border-b border-white/10 pb-3 mb-4">Detalles del Servicio</h2>
-                
-                <ul class="space-y-4">
-                    <li class="flex items-start">
-                        <svg class="w-5 h-5 text-cyber mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <p class="text-gray-200 font-medium">Reunión de 60 minutos</p>
-                            <p class="text-gray-500 text-xs mt-1">Vía Google Meet o Zoom</p>
-                        </div>
-                    </li>
-                    <li class="flex items-start">
-                        <svg class="w-5 h-5 text-cyber mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                        <div>
-                            <p class="text-gray-200 font-medium">Análisis de Vulnerabilidades</p>
-                            <p class="text-gray-500 text-xs mt-1">Revisión preliminar de tu infraestructura</p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Columna Derecha: Calendario Timekit -->
-        <div class="lg:col-span-8">
-            <div class="border border-white/10 bg-gray-900/80 backdrop-blur-md rounded-xl shadow-2xl p-4 sm:p-8 min-h-[600px]">
-                
-                <!-- ESTE DIV ES DONDE TIMEKIT INYECTARÁ EL CALENDARIO -->
-                <div id="bookingjs">
-                    <!-- Mensaje de carga por si el internet es lento -->
-                    <div class="flex flex-col items-center justify-center h-64 text-gray-500 font-mono animate-pulse">
-                        <svg class="w-10 h-10 mb-4 text-cyber" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        Cargando interfaz segura...
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Columna Derecha: Calendario Timekit -->
-        <div class="lg:col-span-8">
-            <div class="border border-white/10 bg-gray-900/80 backdrop-blur-md rounded-xl shadow-2xl p-4 sm:p-8 min-h-[600px]">
-                
-                <!-- ESTE DIV ES DONDE TIMEKIT INYECTARÁ EL CALENDARIO -->
-                <div id="bookingjs"></div>
-
-            </div>
-        </div>
-
-    </div> <!-- Cierre del Grid Principal -->
-
-    <!-- 1. Estilos de Timekit -->
-    <link rel="stylesheet" href="https://cdn.timekit.io/booking-js/v3/booking.min.css" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Auditoría | ByteKnight</title>
     
-    <!-- 2. Configuración del Widget -->
+    <script src="https://cdn.tailwindcss.com\"></script>
     <script>
-        window.timekitBookingConfig = {
-            app_key: 'test_widget_key_gI1S9jHgl3KfscmBKN0tePXhAcfneGTD', // Lo dejamos vacío tal como lo tienes
-            project_id: '5dc394aa-507a-472b-9b72-ce9c5d151a02',
-            
-            // Agregamos el tema visual para mantener el estilo ByteKnight
+        tailwind.config = {
+            darkMode: 'class',
             theme: {
-                primary: '#dc2626', // Tu rojo "cyber"
-                textColor: '#f3f4f6', // Texto gris muy claro
-                backgroundColor: 'transparent' // Para que adopte el fondo de la tarjeta (gray-900)
-            },
-
-            callbacks: {
-                createBookingSuccessful: function(response) {
-                    // Este código se ejecuta en el instante en que el usuario confirma la reserva
-                    
-                    // Opcional: Puedes guardar el nombre del cliente si Timekit lo devuelve
-                    // para usarlo en la siguiente página.
-                    
-                    // Redirección a purchases.html
-                    window.location.href = "purchases.html";
+                extend: {
+                    colors: {
+                        cyber: '#dc2626', // Rojo ByteKnight
+                        dark: '#030712'
+                    }
                 }
             }
         }
     </script>
 
-    <!-- 3. Script principal de Timekit (defer hace que cargue después de la configuración) -->
-    <script src="https://cdn.timekit.io/booking-js/v3/booking.min.js" defer></script>
+    <script type="text/javascript">
+      (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.q) { cal.q = []; } p(cal, ar); }; let js = d.createElement("script"); js.src = A; js.async = true; d.head.appendChild(js); }(window, "https://app.cal.com/embed/embed.js", "Cal"));
+      
+      // Inicializamos el calendario cuando la página cargue
+      window.addEventListener('DOMContentLoaded', () => {
+        Cal("init", { origin: "https://app.cal.com" });
+
+        // Renderizamos el calendario dentro de nuestro contenedor del HTML
+        Cal("inline", {
+          elementOrSelector: "#cal-open-source-container",
+          calLink: "byteknight/auditoria-30min", // Aquí irá tu link de Cal.com
+          config: { 
+            layout: "month_view",
+            theme: "dark" // Se acopla perfectamente al modo oscuro de tu web
+          }
+        });
+
+        // Evento opcional: Si quieres redirigir a purchases.html al terminar la reserva
+        Cal("on", {
+          action: "bookingSuccessful",
+          callback: (e) => {
+            console.log("Reserva completada con éxito en la API Open Source");
+            window.location.href = "purchases.html";
+          }
+        });
+      });
+    </script>
+</head>
+<body class="min-h-screen bg-gray-950 text-gray-100 py-12 px-4 sm:px-6 lg:px-8 font-sans bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')]">
+
+    <div class="max-w-4xl mx-auto bg-gray-900 rounded-2xl border border-white/10 shadow-2xl overflow-hidden p-6 md:p-10 backdrop-blur-xl">
+        
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-400 font-mono tracking-wider uppercase">
+                Agendar Auditoría Premium
+            </h2>
+            <p class="mt-2 text-sm text-gray-400 font-mono">
+                [ Selecciona una ventana de tiempo disponible en nuestro nodo seguro ]
+            </p>
+        </div>
+
+        <div id="cal-open-source-container" class="w-full h-[600px] bg-gray-950/50 rounded-xl border border-white/5 overflow-y-auto">
+            </div>
+
+        <div class="mt-8 text-center">
+            <a href="index.html" class="inline-flex items-center space-x-2 text-xs font-mono tracking-widest text-gray-500 hover:text-cyber transition uppercase">
+                <span>&lt; Abortar Operación y Volver</span>
+            </a>
+        </div>
+    </div>
+
 </body>
 </html>
 </body>

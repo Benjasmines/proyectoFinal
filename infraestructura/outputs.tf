@@ -37,3 +37,7 @@ output "nat_gateway_ip" {
   description = "IP pública del NAT Gateway"
   value       = module.vpc.nat_public_ips[0]
 }
+
+output "api_url" {
+  value = "${aws_apigatewayv2_api.http_api.api_endpoint}/contacto"
+}
