@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Restringido | ByteKnight</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: '#dc2626',
+                        dark: '#030712'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans h-screen w-full overflow-hidden bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')]">
+
+
+    <div id="loginGateway" class="absolute inset-0 z-50 flex items-center justify-center bg-gray-950/90 backdrop-blur-md transition-opacity duration-500">
+        <div class="max-w-sm w-full border border-white/10 bg-gray-900 rounded-xl p-8 shadow-[0_0_40px_rgba(220,38,38,0.15)] relative overflow-hidden mx-4">
+            
+            <div class="absolute top-0 left-0 w-full h-1 bg-cyber shadow-[0_0_20px_#dc2626]"></div>
+
+            <div class="text-center mb-8">
+                <svg class="w-12 h-12 text-cyber mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                <h2 class="text-2xl font-mono uppercase tracking-widest text-white">Terminal <span class="text-cyber">Admin</span></h2>
+                <p class="text-gray-500 text-xs font-mono mt-2">Identificación de seguridad requerida</p>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-mono uppercase tracking-wider text-gray-400 mb-1">Usuario</label>
+                    <input type="text" id="adminUser" placeholder="ej: admin" class="w-full px-4 py-3 rounded-md bg-gray-950 border border-gray-800 text-gray-200 focus:outline-none focus:border-cyber focus:ring-1 focus:ring-cyber transition-all font-mono text-sm" autocomplete="off">
+                </div>
+                <div>
+                    <label class="block text-xs font-mono uppercase tracking-wider text-gray-400 mb-1">Contraseña</label>
+                    <input type="password" id="adminPass" placeholder="••••••••" class="w-full px-4 py-3 rounded-md bg-gray-950 border border-gray-800 text-gray-200 focus:outline-none focus:border-cyber focus:ring-1 focus:ring-cyber transition-all font-mono text-sm">
+                </div>
+
+                <p id="loginError" class="text-cyber text-xs font-mono hidden animate-pulse">Acceso denegado: Credenciales inválidas.</p>
+
+                <button onclick="verificarLogin()" class="w-full mt-4 group/button relative inline-flex items-center justify-center overflow-hidden rounded-md bg-cyber/20 px-6 py-3 text-sm font-mono uppercase tracking-widest font-bold text-white transition-all duration-300 hover:border-cyber/50 border border-white/10">
+                    <span id="btnText">Desencriptar</span>
+                    <div class="absolute inset-0 flex h-full w-full justify-center [transform:skew(-13deg)_translateX(-100%)] group-hover/button:duration-1000 group-hover/button:[transform:skew(-13deg)_translateX(100%)]">
+                        <div class="relative h-full w-10 bg-white/30"></div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="dashboardContent" class="hidden h-screen w-full flex opacity-0 transition-opacity duration-1000">
+        
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-950 border-r border-white/10 hidden md:flex flex-col">
+            <div class="h-20 flex items-center px-8 border-b border-white/10">
+                <span class="text-xl font-mono uppercase tracking-widest font-bold text-white">
+                    Byte<span class="text-cyber">Knight</span>
+                </span>
+            </div>
+            
+            <nav class="flex-1 px-4 py-8 space-y-2 font-mono text-sm uppercase tracking-wider">
+                <a href="#" class="flex items-center px-4 py-3 bg-cyber/10 text-cyber rounded-lg border border-cyber/30">
+                    Dashboard
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-400 hover:text-white rounded-lg transition-colors">
+                    Servicios
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-400 hover:text-white rounded-lg transition-colors">
+                    Clientes
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-white/10">
+                <button onclick="cerrarSesion()" class="flex items-center px-4 py-2 w-full text-sm font-mono text-gray-500 hover:text-cyber transition-colors">
+                    Cerrar Sesión
+                </button>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col h-screen overflow-hidden">
+            <header class="h-20 border-b border-white/10 bg-gray-900/50 backdrop-blur-md flex items-center justify-between px-8">
+                <h1 class="text-xl font-mono uppercase tracking-widest text-white">Resumen Operativo</h1>
+                <div class="flex items-center space-x-4">
+                    <span class="flex h-3 w-3 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-cyber"></span>
+                    </span>
+                    <span class="font-mono text-sm text-gray-400">Sistema en línea</span>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-8">
+                <h2 class="text-2xl font-mono text-white mb-6">Bienvenido, Admin.</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10">
+                            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <p class="text-gray-400 font-mono text-xs uppercase tracking-wider mb-2">Auditorías Pendientes</p>
+                        <p class="text-4xl font-bold text-white font-mono">03</p>
+                    </div>
+                    
+                    <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10">
+                            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <p class="text-gray-400 font-mono text-xs uppercase tracking-wider mb-2">Sistemas Asegurados</p>
+                        <p class="text-4xl font-bold text-white font-mono">14</p>
+                    </div>
+
+                    <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10">
+                            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <p class="text-gray-400 font-mono text-xs uppercase tracking-wider mb-2">Carga de Red</p>
+                        <p class="text-4xl font-bold text-cyber font-mono">42%</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 border border-white/10 rounded-xl shadow-lg overflow-hidden">
+                    <div class="p-6 border-b border-white/10 flex justify-between items-center">
+                        <h3 class="font-mono text-lg text-white">Registro de Operaciones</h3>
+                        <button class="text-xs font-mono text-cyber hover:text-white transition-colors border border-cyber/30 hover:bg-cyber/20 px-3 py-1 rounded">
+                            + Nueva Orden
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-950/50 border-b border-white/10 text-xs uppercase text-gray-500 font-mono tracking-wider">
+                                    <th class="p-4 font-medium">ID Ref</th>
+                                    <th class="p-4 font-medium">Cliente</th>
+                                    <th class="p-4 font-medium">Tipo de Servicio</th>
+                                    <th class="p-4 font-medium">Estado</th>
+                                    <th class="p-4 font-medium text-right">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm font-mono text-gray-300">
+                                <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                    <td class="p-4 text-gray-500">#BK-092</td>
+                                    <td class="p-4 text-white">AquaTech Sur</td>
+                                    <td class="p-4">Auditoría de Red</td>
+                                    <td class="p-4">
+                                        <span class="px-2 py-1 bg-cyber/10 text-cyber border border-cyber/20 rounded text-xs">Pendiente</span>
+                                    </td>
+                                    <td class="p-4 text-right">
+                                        <button class="text-gray-500 hover:text-white transition-colors">Gestionar</button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                    <td class="p-4 text-gray-500">#BK-091</td>
+                                    <td class="p-4 text-white">BioMarinas SpA</td>
+                                    <td class="p-4">Mantenimiento Servidores</td>
+                                    <td class="p-4">
+                                        <span class="px-2 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded text-xs">Completado</span>
+                                    </td>
+                                    <td class="p-4 text-right">
+                                        <button class="text-gray-500 hover:text-white transition-colors">Revisar</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="p-4 text-gray-500">#BK-090</td>
+                                    <td class="p-4 text-white">Logística Austral</td>
+                                    <td class="p-4">Implementación Firewall</td>
+                                    <td class="p-4">
+                                        <span class="px-2 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded text-xs">En Proceso</span>
+                                    </td>
+                                    <td class="p-4 text-right">
+                                        <button class="text-gray-500 hover:text-white transition-colors">Gestionar</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+
+    <script>
+        function verificarLogin() {
+            const user = document.getElementById('adminUser').value;
+            const pass = document.getElementById('adminPass').value;
+            const btnText = document.getElementById('btnText');
+            const errorMsg = document.getElementById('loginError');
+            
+            errorMsg.classList.add('hidden');
+            btnText.innerText = "Verificando red...";
+
+            setTimeout(() => {
+                if (user === 'admin' && pass === 'byteknight') {
+                    const loginScreen = document.getElementById('loginGateway');
+                    const dashboard = document.getElementById('dashboardContent');
+
+                    loginScreen.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        loginScreen.classList.add('hidden');
+                        dashboard.classList.remove('hidden');
+                        
+                        setTimeout(() => {
+                            dashboard.style.opacity = '1';
+                        }, 50);
+
+                    }, 500); 
+                    
+                } else {
+                    errorMsg.classList.remove('hidden');
+                    btnText.innerText = "Desencriptar";
+                    
+                    const loginBox = document.querySelector('.max-w-sm');
+                    loginBox.classList.add('translate-x-2');
+                    setTimeout(() => loginBox.classList.remove('translate-x-2'), 100);
+                }
+            }, 1000);
+        }
+
+        function cerrarSesion() {
+            window.location.reload();
+        }
+
+        document.getElementById('adminPass').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                verificarLogin();
+            }
+        });
+    </script>
+
+</body>
+</html>
