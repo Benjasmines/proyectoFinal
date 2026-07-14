@@ -1,88 +1,114 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Agendar Auditoría | ByteKnight</title>
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        cyber: '#dc2626', // Rojo ByteKnight
-                        dark: '#030712'
-                    }
-                }
-            }
-        }
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              cyber: "#dc2626", // Rojo ByteKnight
+              dark: "#030712",
+            },
+          },
+        },
+      };
     </script>
 
-    <!-- HTMX: ¡Vital para que funcione el monitor de amenazas! -->
+    <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-</head>
-<body class="min-h-screen bg-gray-950 text-gray-100 py-12 px-4 sm:px-6 lg:px-8 font-sans bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')]">
+  </head>
+  <body
+    class="min-h-screen bg-gray-950 text-gray-100 py-12 px-4 sm:px-6 lg:px-8 font-sans bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')]"
+  >
+    <div
+      class="max-w-4xl mx-auto bg-gray-900 rounded-2xl border border-white/10 shadow-2xl overflow-hidden p-6 md:p-10 backdrop-blur-xl"
+    >
+      <!-- ENCABEZADO -->
+      <div class="text-center mb-10">
+        <h2
+          class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-400 font-mono tracking-wider uppercase"
+        >
+          Agendar Auditoría Premium
+        </h2>
+        <p class="mt-2 text-sm text-gray-400 font-mono">
+          [ Selecciona una ventana de tiempo disponible en nuestro nodo seguro ]
+        </p>
+      </div>
 
-    <div class="max-w-4xl mx-auto bg-gray-900 rounded-2xl border border-white/10 shadow-2xl overflow-hidden p-6 md:p-10 backdrop-blur-xl">
-        
-        <!-- ENCABEZADO -->
-        <div class="text-center mb-10">
-            <h2 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-400 font-mono tracking-wider uppercase">
-                Agendar Auditoría Premium
-            </h2>
-            <p class="mt-2 text-sm text-gray-400 font-mono">
-                [ Selecciona una ventana de tiempo disponible en nuestro nodo seguro ]
-            </p>
-        </div>
+      <!-- EL BOTÓN QUE SALVA EL DÍA -->
+      <div class="text-center mb-12">
+        <a
+          href="https://cal.com/benjamin-uribe-x4fsna/byteknight-auditoria-30min"
+          target="_blank"
+          class="inline-block bg-cyber hover:bg-red-700 text-white font-mono font-bold py-4 px-8 rounded-lg shadow-[0_0_15px_rgba(220,38,38,0.5)] hover:shadow-[0_0_25px_rgba(220,38,38,0.8)] transition-all duration-300 transform hover:-translate-y-1"
+        >
+          >_ INICIAR ENLACE SEGURO DE RESERVA
+        </a>
+        <p class="mt-4 text-xs text-gray-500 font-mono">
+          El calendario se abrirá en un túnel cifrado (nueva pestaña).
+        </p>
+      </div>
 
-        <!-- EL BOTÓN QUE SALVA EL DÍA (Reemplaza al widget de Cal.com) -->
-        <div class="text-center mb-12">
-            <a href="https://cal.com/benjamin-uribe-x4fsna/byteknight-auditoria-30min" 
-               target="_blank" 
-               class="inline-block bg-cyber hover:bg-red-700 text-white font-mono font-bold py-4 px-8 rounded-lg shadow-[0_0_15px_rgba(220,38,38,0.5)] hover:shadow-[0_0_25px_rgba(220,38,38,0.8)] transition-all duration-300 transform hover:-translate-y-1">
-               >_ INICIAR ENLACE SEGURO DE RESERVA
-            </a>
-            <p class="mt-4 text-xs text-gray-500 font-mono">El calendario se abrirá en un túnel cifrado (nueva pestaña).</p>
-        </div>
+      <!-- PANEL DE AMENAZAS EN TIEMPO REAL (HTMX DINÁMICO) -->
+      <div
+        class="bg-gray-950/50 p-6 rounded-xl border border-white/5 relative overflow-hidden shadow-inner"
+      >
+        <div class="absolute top-0 left-0 w-1 h-full bg-cyber"></div>
 
-        <!-- PANEL DE AMENAZAS EN TIEMPO REAL (HTMX) -->
-        <div class="bg-gray-950/50 p-6 rounded-xl border border-white/5 relative overflow-hidden shadow-inner">
-            <!-- Barra decorativa lateral -->
-            <div class="absolute top-0 left-0 w-1 h-full bg-cyber"></div>
-            
-            <h3 class="text-lg font-mono font-bold text-white mb-6 flex items-center">
-                <span class="animate-pulse mr-2 text-cyber">🚨</span> 
-                MONITOR GLOBAL DE AMENAZAS RECIENTES
-            </h3>
-            
-            <!-- HTMX llama a tu Lambda automáticamente -->
-            <!-- Importante: Si tu API de Terraform aún no está lista, aquí se verá el esqueleto de carga -->
-            <div hx-get="${api_url}/amenazas" 
-                 hx-trigger="load" 
-                 hx-swap="innerHTML">
-                
-                <!-- Esqueleto de carga (Spinner Cyber) -->
-                <div class="animate-pulse flex space-x-4">
-                    <div class="flex-1 space-y-4 py-1">
-                        <div class="h-4 bg-gray-800 rounded w-3/4"></div>
-                        <div class="h-4 bg-gray-800 rounded w-1/2"></div>
-                        <div class="h-4 bg-gray-800 rounded w-5/6"></div>
-                    </div>
-                </div>
+        <h3
+          class="text-lg font-mono font-bold text-white mb-6 flex items-center"
+        >
+          <span class="animate-pulse mr-2 text-cyber">🚨</span>
+          MONITOR GLOBAL DE AMENAZAS RECIENTES
+        </h3>
+
+        <!-- Contenedor con ID para ser llenado dinámicamente -->
+        <div id="monitor-contenido">
+          <!-- Esqueleto de carga inicial -->
+          <div class="animate-pulse flex space-x-4">
+            <div class="flex-1 space-y-4 py-1">
+              <div class="h-4 bg-gray-800 rounded w-3/4"></div>
+              <div class="h-4 bg-gray-800 rounded w-1/2"></div>
+              <div class="h-4 bg-gray-800 rounded w-5/6"></div>
             </div>
+          </div>
         </div>
+      </div>
 
-        <!-- BOTÓN DE RETROCESO -->
-        <div class="mt-10 text-center">
-            <a href="index.html" class="inline-flex items-center space-x-2 text-xs font-mono tracking-widest text-gray-500 hover:text-white transition uppercase">
-                <span>&lt; Abortar Operación y Volver</span>
-            </a>
-        </div>
-        
+      <!-- BOTÓN DE RETROCESO -->
+      <div class="mt-10 text-center">
+        <a
+          href="index.html"
+          class="inline-flex items-center space-x-2 text-xs font-mono tracking-widest text-gray-500 hover:text-white transition uppercase"
+        >
+          <span>&lt; Abortar Operación y Volver</span>
+        </a>
+      </div>
     </div>
 
-</body>
+    <!-- LÓGICA DE CARGA DINÁMICA DE LA URL -->
+    <script>
+      fetch("config.json")
+        .then((response) => response.json())
+        .then((config) => {
+          const el = document.getElementById("monitor-contenido");
+          // Inyectamos la URL real y activamos HTMX
+          el.setAttribute("hx-get", config.apiUrl + "/amenazas");
+          el.setAttribute("hx-trigger", "load");
+          el.setAttribute("hx-swap", "innerHTML");
+          htmx.process(el);
+        })
+        .catch((err) => {
+          document.getElementById("monitor-contenido").innerHTML =
+            '<p class="text-red-500 font-mono text-sm">Error: No se pudo conectar con el servidor de amenazas.</p>';
+        });
+    </script>
+  </body>
 </html>

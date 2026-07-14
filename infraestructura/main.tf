@@ -275,30 +275,46 @@ resource "aws_iam_role_policy" "lambda_s3_policy" {
   })
 }
 
-# 3. Función Lambda (código generado en línea)
+# ============================================================
+# 3. LAMBDA — FORMULARIO DE CONTACTO 
+# ============================================================
+# Empaquetamos el código de contacto en tiempo real
+data "archive_file" "zip_contacto" {
+  type        = "zip"
+  source_file = "${path.module}/backend/contacto.py" 
+  output_path = "${path.module}/backend/lambda_contacto.zip"
+}
+
 resource "aws_lambda_function" "contact_handler" {
   function_name    = "${var.project_name}-contacto"
   role             = aws_iam_role.lambda_exec.arn
-  handler          = "index.lambda_handler"
+  handler          = "contacto.lambda_handler"
   runtime          = "python3.9"
-  filename         = "lambda_function.zip" # Asegúrate de tener este zip o usar data "archive_file"
+
+  # Usamos el zip dinámico
+  filename         = data.archive_file.zip_contacto.output_path
+  source_code_hash = data.archive_file.zip_contacto.output_base64sha256
 
   environment {
     variables = { BUCKET_NAME = aws_s3_bucket.contact_data.bucket }
   }
 }
 
-# 4. API Gateway (HTTP API)
+# ============================================================
+# 4. API GATEWAY (BASE COMPARTIDA)
+# ============================================================
 resource "aws_apigatewayv2_api" "http_api" {
   name          = "${var.project_name}-api"
   protocol_type = "HTTP"
   cors_configuration {
     allow_origins = ["*"]
-    allow_methods = ["POST", "OPTIONS"]
+    allow_methods = ["POST", "GET", "OPTIONS"] # Agregamos GET para las amenazas
     allow_headers = ["content-type"]
+    max_age       = 300
   }
 }
 
+# -> Ruta 1: POST /contacto
 resource "aws_apigatewayv2_integration" "lambda_integration" {
   api_id           = aws_apigatewayv2_api.http_api.id
   integration_type = "AWS_PROXY"
@@ -316,4 +332,72 @@ resource "aws_lambda_permission" "api_gw" {
   function_name = aws_lambda_function.contact_handler.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
+}
+
+# ============================================================
+# 5. LAMBDA Y API GATEWAY — AMENAZAS EN TIEMPO REAL
+# ============================================================
+# -> Empaquetamos el código de amenazas
+data "archive_file" "zip_amenazas" {
+  type        = "zip"
+  source_file = "${path.module}/backend/lambda_amenazas.py"
+  output_path = "${path.module}/backend/lambda_amenazas.zip"
+}
+
+# -> Rol básico para la Lambda de Amenazas
+resource "aws_iam_role" "rol_para_lambda" {
+  name = "${var.project_name}-rol-amenazas"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = { Service = "lambda.amazonaws.com" }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "permisos_basicos_lambda" {
+  role       = aws_iam_role.rol_para_lambda.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+# -> Función Lambda de Amenazas
+resource "aws_lambda_function" "lambda_amenazas" {
+  function_name = "${var.project_name}-api-amenazas"
+  
+  filename         = data.archive_file.zip_amenazas.output_path
+  source_code_hash = data.archive_file.zip_amenazas.output_base64sha256
+
+  handler = "lambda_amenazas.lambda_handler" 
+  runtime = "python3.10" 
+  timeout = 10 
+  role    = aws_iam_role.rol_para_lambda.arn 
+}
+
+# -> Ruta 2: GET /amenazas
+resource "aws_apigatewayv2_integration" "integracion_amenazas" {
+  api_id           = aws_apigatewayv2_api.http_api.id
+  integration_type = "AWS_PROXY"
+  integration_uri  = aws_lambda_function.lambda_amenazas.invoke_arn
+}
+
+resource "aws_apigatewayv2_route" "ruta_amenazas" {
+  api_id    = aws_apigatewayv2_api.http_api.id
+  route_key = "GET /amenazas"
+  target    = "integrations/${aws_apigatewayv2_integration.integracion_amenazas.id}"
+}
+
+resource "aws_lambda_permission" "permiso_api_gateway_amenazas" {
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda_amenazas.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
+}
+
+resource "local_file" "api_config" {
+    filename = "${path.module}/../sitio-web/config.json" 
+    content  = jsonencode({
+        apiUrl = "${aws_apigatewayv2_api.http_api.api_endpoint}"
+    })
 }
