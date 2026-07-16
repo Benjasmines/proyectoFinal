@@ -1,24 +1,32 @@
 import json
-import urllib3 
+import urllib3
 
 def lambda_handler(event, context):
-    # 1. Tu Lambda se conecta a CISA (esto el navegador no puede hacerlo)
     http = urllib3.PoolManager()
     url_cisa = "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
     
-    response = http.request('GET', url_cisa)
-    data = json.loads(response.data.decode('utf-8'))
-    
-    # 2. Aquí filtras lo que quieras devolver al frontend
-    resultado = {
-        "amenazas": data.get('vulnerabilities', [])[:5] # Solo las primeras 5
-    }
-    
-    # 3. Devuelves la respuesta al API Gateway con los headers necesarios
+    try:
+        # 1. Llamada segura servidor-servidor a CISA (Sin problemas de CORS)
+        response = http.request('GET', url_cisa)
+        data = json.loads(response.data.decode('utf-8'))
+        
+        # 2. Extraemos y filtramos únicamente las primeras 5 vulnerabilidades
+        vulnerabilities = data.get('vulnerabilities', [])
+        resultado = {
+            "amenazas": vulnerabilities[:5]
+        }
+        status_code = 200
+        
+    except Exception as e:
+        resultado = {"error": f"Fallo al consultar CISA: {str(e)}"}
+        status_code = 500
+
+    # 3. Retornamos con headers explícitos para el navegador
     return {
-        'statusCode': 200,
+        'statusCode': status_code,
         'headers': {
-            'Access-Control-Allow-Origin': '*', # ¡Esto soluciona el CORS!
+            'Access-Control-Allow-Origin': '*', # Solución definitiva al error de CORS
+            'Access-Control-Allow-Methods': 'GET, OPTIONS',
             'Content-Type': 'application/json'
         },
         'body': json.dumps(resultado)

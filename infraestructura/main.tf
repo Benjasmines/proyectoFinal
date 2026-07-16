@@ -3,30 +3,20 @@
 # ============================================================
 data "aws_caller_identity" "current" {}
 
-# ============================================================
 # ECR — REPOSITORIO DE IMÁGENES DOCKER
 # ============================================================
 resource "aws_ecr_repository" "app" {
-    name         = var.project_name
-    force_delete = true
+  name                 = var.project_name
+  force_delete         = true
+  image_tag_mutability = "MUTABLE"
 
-    tags         = { Name = var.project_name }
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+
+  tags = { Name = var.project_name }
 }
 
-resource "null_resource" "docker_build_push" {
-    depends_on   = [aws_ecr_repository.app]
-
-    triggers     = {
-        repo_url  = aws_ecr_repository.app.repository_url
-        image_tag = var.image_tag
-    }
-
-    provisioner "local-exec" {
-        command  = <<-EOT
-            aws ecr get-login-password --region ${var.region} |  docker login --username AWS --password-stdin ${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com && docker build --no-cache -t ${var.project_name}:${var.image_tag} ${var.app_path} && docker tag ${var.project_name}:${var.image_tag} ${aws_ecr_repository.app.repository_url}:${var.image_tag} && docker push ${aws_ecr_repository.app.repository_url}:${var.image_tag}
-        EOT
-    }
-}
 
 # ============================================================
 # VPC Y RED MULTI-AZ (USANDO MÓDULO OFICIAL)
@@ -177,7 +167,6 @@ resource "aws_ecs_cluster" "main" {
 }
 
 resource "aws_ecs_task_definition" "app" {
-    depends_on               = [null_resource.docker_build_push]
     family                   = "${var.project_name}-task"
     network_mode             = "awsvpc"
     requires_compatibilities = ["FARGATE"]
@@ -301,16 +290,17 @@ resource "aws_lambda_function" "contact_handler" {
 }
 
 # ============================================================
-# 4. API GATEWAY (BASE COMPARTIDA)
+# 4. API GATEWAY 
 # ============================================================
 resource "aws_apigatewayv2_api" "http_api" {
   name          = "${var.project_name}-api"
   protocol_type = "HTTP"
+
   cors_configuration {
     allow_origins = ["*"]
-    allow_methods = ["POST", "GET", "OPTIONS"] # Agregamos GET para las amenazas
-    allow_headers = ["content-type"]
-    max_age       = 300
+    allow_methods = ["POST", "GET", "OPTIONS"]
+    allow_headers = ["content-type", "authorization"] 
+    max_age       = 300                               
   }
 }
 
@@ -400,4 +390,28 @@ resource "local_file" "api_config" {
     content  = jsonencode({
         apiUrl = "${aws_apigatewayv2_api.http_api.api_endpoint}"
     })
+}
+
+# ============================================================
+# PERMISOS DE S3 PARA EL FORMULARIO DE CONTACTO
+# ============================================================
+resource "aws_iam_role_policy" "lambda_s3_contacto_nuevo" {
+  name = "${var.project_name}-s3-contacto-policy"
+  
+  # Extraemos el nombre del rol directamente del de contacto
+  role = split("/", aws_lambda_function.contact_handler.role)[1]
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:PutObject"
+        ]
+
+        Resource = "arn:aws:s3:::${var.project_name}-contactos-bucket/*" 
+      }
+    ]
+  })
 }
