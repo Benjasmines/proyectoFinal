@@ -17,6 +17,23 @@ resource "aws_ecr_repository" "app" {
   tags = { Name = var.project_name }
 }
 
+resource "null_resource" "docker_push" {
+  triggers = {
+    # Si cambia el HTML renderizado o la configuración de la API, se dispara la subida.
+    html_change   = local_file.html_renderizado.id
+    config_change = local_file.api_config.id
+  }
+
+  provisioner "local-exec" {
+    command = "aws ecr get-login-password --region ${var.region} | docker login --username AWS --password-stdin ${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com && docker build --platform linux/amd64 -t ${var.project_name} ../sitio-web/ && docker tag ${var.project_name}:latest ${aws_ecr_repository.app.repository_url}:1.0 && docker push ${aws_ecr_repository.app.repository_url}:1.0"
+  }
+
+  depends_on = [
+    aws_ecr_repository.app,
+    local_file.html_renderizado,
+    local_file.api_config
+  ]
+}
 
 # ============================================================
 # VPC Y RED MULTI-AZ (USANDO MÓDULO OFICIAL)
@@ -238,12 +255,15 @@ resource "aws_appautoscaling_policy" "ecs_cpu_policy" {
   }
 }
 
-# 1. Bucket S3 para guardar los datos de contacto
+# ============================================================
+# ALMACENAMIENTO DE DATOS (S3)
+# ============================================================
+# 1. Bucket S3 para guardar los datos de contacto y reserva
 resource "aws_s3_bucket" "contact_data" {
   bucket = "${var.project_name}-contactos-${data.aws_caller_identity.current.account_id}"
 }
 
-# 2. Rol IAM para la Lambda
+# 2. Rol IAM para la Lambda de Contactos/Reservas
 resource "aws_iam_role" "lambda_exec" {
   name = "${var.project_name}-lambda-role"
   assume_role_policy = jsonencode({
@@ -265,7 +285,7 @@ resource "aws_iam_role_policy" "lambda_s3_policy" {
 }
 
 # ============================================================
-# 3. LAMBDA — FORMULARIO DE CONTACTO 
+# 3. LAMBDA — FORMULARIO DE CONTACTO Y RESERVAS (UNIFICADO)
 # ============================================================
 # Empaquetamos el código de contacto en tiempo real
 data "archive_file" "zip_contacto" {
@@ -304,19 +324,28 @@ resource "aws_apigatewayv2_api" "http_api" {
   }
 }
 
-# -> Ruta 1: POST /contacto
+# -> Integración de la Lambda Principal con API Gateway
 resource "aws_apigatewayv2_integration" "lambda_integration" {
   api_id           = aws_apigatewayv2_api.http_api.id
   integration_type = "AWS_PROXY"
   integration_uri  = aws_lambda_function.contact_handler.invoke_arn
 }
 
+# -> Ruta 1: POST /contacto
 resource "aws_apigatewayv2_route" "post_contacto" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "POST /contacto"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
+# -> Ruta 3: POST /reserva (NUEVO: Dirigido al mismo controlador de Lambda)
+resource "aws_apigatewayv2_route" "post_reserva" {
+  api_id    = aws_apigatewayv2_api.http_api.id
+  route_key = "POST /reserva"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
+}
+
+# -> Permisos para que API Gateway pueda invocar a la Lambda Principal
 resource "aws_lambda_permission" "api_gw" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.contact_handler.function_name
@@ -385,33 +414,12 @@ resource "aws_lambda_permission" "permiso_api_gateway_amenazas" {
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
 }
 
+# ============================================================
+# ARCHIVO DE CONFIGURACIÓN AUTOMÁTICO (SITIO WEB)
+# ============================================================
 resource "local_file" "api_config" {
     filename = "${path.module}/../sitio-web/config.json" 
     content  = jsonencode({
         apiUrl = "${aws_apigatewayv2_api.http_api.api_endpoint}"
     })
-}
-
-# ============================================================
-# PERMISOS DE S3 PARA EL FORMULARIO DE CONTACTO
-# ============================================================
-resource "aws_iam_role_policy" "lambda_s3_contacto_nuevo" {
-  name = "${var.project_name}-s3-contacto-policy"
-  
-  # Extraemos el nombre del rol directamente del de contacto
-  role = split("/", aws_lambda_function.contact_handler.role)[1]
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          "s3:PutObject"
-        ]
-
-        Resource = "arn:aws:s3:::${var.project_name}-contactos-bucket/*" 
-      }
-    ]
-  })
 }

@@ -77,10 +77,10 @@
 
             // CAMBIO AQUÍ: Agregamos un $ extra para escapar la variable ante Terraform
             if (formContacto) {
-              formContacto.setAttribute("hx-post", `$${config.apiUrl}/contacto`);
+              formContacto.setAttribute("hx-post", `${config.apiUrl}/contacto`);
             }
             if (formReserva) {
-              formReserva.setAttribute("hx-post", `$${config.apiUrl}/reserva`);
+              formReserva.setAttribute("hx-post", `${config.apiUrl}/reserva`);
             }
 
             // Notificar a HTMX que procese los nuevos atributos de los formularios
