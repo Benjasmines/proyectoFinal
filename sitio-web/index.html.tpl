@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="es" class="scroll-smooth">
   <head>
@@ -49,47 +50,6 @@
         color: white;
       }
     </style>
-
-    <!-- ============================================================ -->
-    <!-- NUEVO: SCRIPT DE CONFIGURACIÓN DINÁMICA DE APIS & FECHAS     -->
-    <!-- ============================================================ -->
-    <!-- ============================================================ -->
-    <!-- NUEVO: SCRIPT DE CONFIGURACIÓN DINÁMICA DE APIS & FECHAS     -->
-    <!-- ============================================================ -->
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        // 1. Bloquear fechas pasadas en el calendario de reservas
-        const hoy = new Date().toISOString().split('T')[0];
-        const fechaInput = document.getElementById('fecha-reserva');
-        if (fechaInput) {
-          fechaInput.min = hoy;
-        }
-
-        // 2. Cargar config.json dinámicamente e inyectar endpoints en HTMX
-        fetch("config.json")
-          .then(response => {
-            if (!response.ok) throw new Error("No se pudo cargar config.json");
-            return response.json();
-          })
-          .then(config => {
-            const formContacto = document.getElementById("formulario-contacto");
-            const formReserva = document.getElementById("formulario-reserva");
-
-            // CAMBIO AQUÍ: Agregamos un $ extra para escapar la variable ante Terraform
-            if (formContacto) {
-              formContacto.setAttribute("hx-post", `$${config.apiUrl}/contacto`);
-            }
-            if (formReserva) {
-              formReserva.setAttribute("hx-post", `$${config.apiUrl}/reserva`);
-            }
-
-            // Notificar a HTMX que procese los nuevos atributos de los formularios
-            htmx.process(document.body);
-            console.log("Endpoints dinámicos de HTMX configurados con éxito.");
-          })
-          .catch(err => console.error("Error inicializando API en HTMX:", err));
-      });
-    </script>
   </head>
 
   <body class="bg-dark text-gray-300 font-sans">
@@ -109,8 +69,6 @@
           >Enfoques</a
         >
         <a href="#servicios" class="hover:text-cyber transition">Servicios</a>
-        <!-- Apuntamos a la nueva sección de reserva nativa -->
-        <a href="#reserva" class="hover:text-cyber transition">Reservar</a>
         <a
           href="#contacto"
           class="hover:text-cyber transition underline decoration-cyber"
@@ -414,7 +372,7 @@
           <p class="text-gray-400 text-sm leading-relaxed mb-6">
             Simulación de ataques reales para identificar vulnerabilidades críticas en tu red y aplicaciones web.
           </p>
-          <a href="#reserva" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+          <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
             <span class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
             <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
               <div class="relative z-10 flex items-center space-x-2">
@@ -436,7 +394,7 @@
           <p class="text-gray-400 text-sm leading-relaxed mb-6">
             Revisión profunda de aplicaciones para asegurar que tu software sea seguro desde la primera línea de código.
           </p>
-          <a href="#reserva" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+          <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
             <span class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
             <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
               <div class="relative z-10 flex items-center space-x-2">
@@ -458,7 +416,7 @@
           <p class="text-gray-400 text-sm leading-relaxed mb-6">
             Si has sido comprometido, nuestro equipo de respuesta rápida mitiga el daño y recupera tus activos.
           </p>
-          <a href="#reserva" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+          <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
             <span class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
             <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
               <div class="relative z-10 flex items-center space-x-2">
@@ -480,7 +438,7 @@
           <p class="text-gray-400 text-sm leading-relaxed mb-6">
             Evaluación de protocolos de cifrado y puntos de acceso para evitar intrusiones a través del perímetro inalámbrico.
           </p>
-          <a href="#reserva" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+          <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
             <span class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
             <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
               <div class="relative z-10 flex items-center space-x-2">
@@ -502,7 +460,7 @@
           <p class="text-gray-400 text-sm leading-relaxed mb-6">
             Pruebas de concienciación mediante campañas de Phishing controladas para medir el factor humano de seguridad.
           </p>
-          <a href="#reserva" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+          <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
             <span class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
             <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
               <div class="relative z-10 flex items-center space-x-2">
@@ -524,7 +482,7 @@
           <p class="text-gray-400 text-sm leading-relaxed mb-6">
             Análisis post-mortem de sistemas comprometidos para identificar el origen, alcance y rastro dejado por atacantes.
           </p>
-          <a href="#reserva" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+          <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
             <span class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
             <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
               <div class="relative z-10 flex items-center space-x-2">
@@ -534,85 +492,6 @@
             </span>
           </a>
         </div>
-      </div>
-    </section>
-
-    <!-- ============================================================ -->
-    <!-- NUEVO: SECCIÓN DE RESERVAS NATIVAS CON CALENDARIO (HTMX)     -->
-    <!-- ============================================================ -->
-    <section id="reserva" class="py-24 px-6 max-w-4xl mx-auto scroll-mt-20">
-      <div class="mb-12 text-center">
-        <h3 class="text-cyber font-mono text-sm tracking-[0.3em] mb-2 uppercase">
-          // AUDITORÍA_SISTEMAS
-        </h3>
-        <h2 class="text-4xl font-extrabold text-white mb-4">
-          Agenda una Sesión Técnica
-        </h2>
-        <p class="text-gray-400 max-w-xl mx-auto text-sm font-light">
-          Selecciona una fecha y hora cómodas. Sin trackers, sin cookies, directamente conectado con tu ecosistema de auditorías.
-        </p>
-      </div>
-
-      <div class="glass p-8 rounded-2xl border border-white/5 relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyber to-transparent opacity-50"></div>
-        
-        <!-- Contenedor para recibir la respuesta de la reserva vía HTMX -->
-        <div id="reserva-respuesta" class="mb-6 font-mono text-xs"></div>
-
-        <form id="formulario-reserva"
-              hx-target="#reserva-respuesta"
-              hx-swap="innerHTML"
-              class="space-y-6">
-          
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-xs font-mono text-gray-500 mb-2 uppercase">Operador / Nombre</label>
-              <input type="text" name="nombre" required
-                     class="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-cyber transition"
-                     placeholder="Operator_User" />
-            </div>
-            <div>
-              <label class="block text-xs font-mono text-gray-500 mb-2 uppercase">Email de Respuesta</label>
-              <input type="email" name="email" required
-                     class="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-cyber transition"
-                     placeholder="secure@email.com" />
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-xs font-mono text-gray-500 mb-2 uppercase">Selecciona el Día</label>
-              <input type="date" id="fecha-reserva" name="fecha" required
-                     class="w-full bg-white/5 border border-white/10 rounded p-3 text-gray-300 focus:outline-none focus:border-cyber transition cursor-pointer" />
-            </div>
-            <div>
-              <label class="block text-xs font-mono text-gray-500 mb-2 uppercase">Bloque de Hora (CLST)</label>
-              <select name="hora" required
-                      class="w-full bg-white/5 border border-white/10 rounded p-3 text-gray-400 focus:outline-none focus:border-cyber transition cursor-pointer">
-                <option value="">-- Elige una hora --</option>
-                <option value="09:00">09:00 AM</option>
-                <option value="11:00">11:00 AM</option>
-                <option value="14:00">02:00 PM</option>
-                <option value="16:00">04:00 PM</option>
-              </select>
-            </div>
-          </div>
-
-          <button type="submit"
-                  class="w-full relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-[1.01] active:scale-[0.99] group/btn">
-            <span class="absolute inset-0 rounded-xl bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
-            <span class="relative z-10 block w-full px-6 py-4 rounded-xl bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
-              <div class="relative z-10 flex items-center justify-center space-x-2">
-                <span class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white">
-                  Confirmar Reserva Segura
-                </span>
-                <svg class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path>
-                </svg>
-              </div>
-            </span>
-          </button>
-        </form>
       </div>
     </section>
 

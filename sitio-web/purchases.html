@@ -1,83 +1,262 @@
+
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es" class="scroll-smooth dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reserva Confirmada | ByteKnight</title>
     
-    <!-- Tailwind CSS -->
+    <!-- Fuentes y Tailwind -->
+    <!-- Fuentes y Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        cyber: '#dc2626', // Rojo ByteKnight
-                        dark: '#030712'
-                    }
-                }
-            }
-        }
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              terminal: "#00ff41",
+              dark: "#0a0a0a",
+              cyber: "#ff0000",
+            },
+            fontFamily: {
+              mono: ["JetBrains Mono", "monospace"],
+              sans: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
     </script>
+    <style>
+      .glass {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .glow:hover {
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+        transition: 0.3s;
+      }
+    </style>
 </head>
-<body class="min-h-screen bg-gray-950 text-gray-100 flex items-center justify-center p-4 font-sans bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')]">
 
-    <!-- Tarjeta de Confirmación -->
-    <div class="max-w-lg w-full border border-white/10 bg-gray-900/80 backdrop-blur-md rounded-xl p-8 sm:p-10 shadow-2xl text-center relative overflow-hidden">
-        
-        <!-- Línea decorativa superior -->
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-cyber shadow-[0_0_20px_#dc2626]"></div>
+<body class="bg-dark text-gray-300 font-sans min-h-screen flex flex-col items-center">
 
-        <!-- Icono de Éxito -->
-        <div class="w-20 h-20 mx-auto bg-cyber/10 rounded-full flex items-center justify-center mb-6 border border-cyber/30">
-            <svg class="w-10 h-10 text-cyber" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+    <!-- Navbar unificada -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass py-4 px-6 flex justify-between items-center transition-all duration-300 hover:bg-black/80">
+      <div class="text-cyber font-mono font-bold text-xl tracking-tighter">
+        <a href="index.html"><span class="text-white">//</span> BYTEKNIGHT</a>
+      </div>
+      <div class="hidden md:flex space-x-8 font-mono text-sm uppercase tracking-widest">
+        <a href="index.html#sobre-nosotros" class="hover:text-cyber transition">Nosotros</a>
+        <a href="index.html#enfoques-de-hacking" class="hover:text-cyber transition">Enfoques</a>
+        <a href="index.html#servicios" class="hover:text-cyber transition">Servicios</a>
+        <a href="index.html#contacto" class="hover:text-cyber transition underline decoration-cyber">Contacto</a>
+      </div>
+    </nav>
+
+    <!-- Tarjeta de Confirmación con padding top para compensar nav -->
+    <div class="max-w-lg w-full flex-grow flex items-center justify-center pt-32 pb-12 px-4">
+        <div class="w-full glass rounded-xl p-8 sm:p-10 shadow-2xl text-center relative overflow-hidden">
+            
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-cyber shadow-[0_0_20px_#ff0000]"></div>
+
+            <div class="w-20 h-20 mx-auto bg-cyber/10 rounded-full flex items-center justify-center mb-6 border border-cyber/30">
+                <svg class="w-10 h-10 text-cyber" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <p class="text-cyber font-mono font-bold mt-2">ORDEN_ID: <span id="orderId">Generando...</span></p>
+
+            <div class="mt-6 flex border border-white/10 rounded-lg overflow-hidden font-mono text-xs uppercase tracking-widest">
+                <button type="button" id="tab-btn-compra" class="flex-1 py-3 bg-cyber/20 text-white border-r border-white/10 transition">Compra</button>
+                <button type="button" id="tab-btn-recibo" class="flex-1 py-3 bg-dark/50 text-gray-500 transition">Recibo</button>
+            </div>
+
+            <div id="tab-compra">
+                <div id="resumen-compra" class="hidden mt-6 bg-dark/50 border border-white/5 rounded-xl p-5 text-left font-mono text-sm">
+                    <p class="text-gray-500 uppercase text-xs mb-2">Servicios Contratados</p>
+                    <p id="resumen-servicios" class="text-gray-300 mb-4">-</p>
+                    <div class="flex items-center justify-between border-t border-white/10 pt-3">
+                        <span class="text-gray-400 uppercase text-xs">Total a Pagar</span>
+                        <span id="resumen-total" class="text-cyber text-xl font-bold">$0</span>
+                    </div>
+                </div>
+
+                <div id="temporizador-reserva" class="mt-8 bg-cyber/10 border border-cyber/30 rounded-xl p-4 font-mono">
+                    <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">Tiempo restante para pagar</p>
+                    <p id="temporizador-texto" class="text-3xl font-bold text-cyber tracking-widest">60:00</p>
+                    <p class="text-xs text-gray-500 mt-1">Tienes 1 hora para pagar o se libera el cupo.</p>
+                </div>
+
+                <div id="contenedor-formulario" class="bg-dark/50 p-6 rounded-xl border border-white/5 relative shadow-inner mt-8">
+                    <h3 class="text-lg font-mono font-bold text-white mb-6">>_ PROCESAR_ADQUISICIÓN</h3>
+
+                    <form id="formulario-compra" hx-target="#respuesta-pago" class="space-y-4 font-mono text-sm text-left">
+                        <input type="hidden" name="monto" id="input-monto" value="0">
+                        <input type="hidden" name="servicios_contratados" id="input-servicios" value="">
+
+                        <div>
+                            <label class="block text-gray-400 mb-2 uppercase text-xs">Email de Contacto</label>
+                            <input type="email" name="correo" required placeholder="operador@nodo.com" class="w-full bg-white/5 border border-white/10 p-3 rounded text-white focus:border-cyber focus:outline-none transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-400 mb-2 uppercase text-xs">Credencial de Pago (Tarjeta)</label>
+                            <input type="text" name="tarjeta" required maxlength="19" pattern="[0-9\s\-]{13,19}" placeholder="4000 0000 0000 0000" class="w-full bg-white/5 border border-white/10 p-3 rounded text-white focus:border-cyber focus:outline-none transition" title="Ingresa de 13 a 19 números">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-400 mb-2 uppercase text-xs">Expiración</label>
+                                <input type="text" name="expiracion" required maxlength="5" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" placeholder="MM/AA" class="w-full bg-white/5 border border-white/10 p-3 rounded text-white focus:border-cyber focus:outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-gray-400 mb-2 uppercase text-xs">CVV</label>
+                                <input type="text" name="cvv" required maxlength="4" pattern="[0-9]{3,4}" placeholder="123" inputmode="numeric" class="w-full bg-white/5 border border-white/10 p-3 rounded text-white focus:border-cyber focus:outline-none transition">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-cyber/20 border border-cyber text-white font-bold py-3 mt-4 hover:bg-cyber hover:text-black transition glow uppercase">
+                            EJECUTAR_TRANSACCIÓN
+                        </button>
+                    </form>
+                    <div id="respuesta-pago" class="mt-4"></div>
+                </div>
+            </div>
+
+            <div id="tab-recibo" class="hidden mt-6 bg-dark/50 border border-white/5 rounded-xl p-5 text-left font-mono text-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-gray-500 uppercase text-xs">Estado</span>
+                    <span id="recibo-estado" class="text-xs font-bold uppercase px-2 py-1 rounded bg-yellow-500/10 text-yellow-400 border border-yellow-500/30">Pendiente</span>
+                </div>
+
+                <dl class="space-y-3">
+                    <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                        <dt class="text-gray-500 uppercase text-xs">N° de Orden</dt>
+                        <dd id="recibo-orden" class="text-gray-200">-</dd>
+                    </div>
+                    <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                        <dt class="text-gray-500 uppercase text-xs">Fecha</dt>
+                        <dd id="recibo-fecha" class="text-gray-200">-</dd>
+                    </div>
+                    <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                        <dt class="text-gray-500 uppercase text-xs">Email</dt>
+                        <dd id="recibo-email" class="text-gray-200">-</dd>
+                    </div>
+                    <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                        <dt class="text-gray-500 uppercase text-xs">Tarjeta</dt>
+                        <dd id="recibo-tarjeta" class="text-gray-200">-</dd>
+                    </div>
+                    <div class="border-b border-white/5 pb-2">
+                        <dt class="text-gray-500 uppercase text-xs mb-1">Servicios</dt>
+                        <dd id="recibo-servicios" class="text-gray-200">-</dd>
+                    </div>
+                    <div class="flex items-center justify-between pt-1">
+                        <dt class="text-gray-400 uppercase text-xs">Total</dt>
+                        <dd id="recibo-total" class="text-cyber text-xl font-bold">$0</dd>
+                    </div>
+                </dl>
+
+                <p id="recibo-aviso" class="text-xs text-gray-600 mt-4">Este recibo se completará al confirmar pago.</p>
+                <button type="button" id="btn-descargar-recibo" class="w-full bg-cyber/20 border border-cyber text-white font-bold py-3 mt-5 hover:bg-cyber hover:text-black transition uppercase tracking-widest text-xs glow">
+                    ⬇ Descargar PDF
+                </button>
+            </div>
+
+            <a href="index.html" class="mt-8 w-full group/button relative inline-flex items-center justify-center overflow-hidden rounded-md bg-cyber/20 glass px-6 py-4 text-sm font-mono uppercase tracking-widest font-bold text-white transition-all duration-300 ease-in-out hover:scale-[1.02] border border-white/10 hover:border-cyber/50">
+                <span>Volver al Inicio</span>
+                <div class="absolute inset-0 flex h-full w-full justify-center [transform:skew(-13deg)_translateX(-100%)] group-hover/button:duration-1000 group-hover/button:[transform:skew(-13deg)_translateX(100%)]">
+                    <div class="relative h-full w-12 bg-white/30"></div>
+                </div>
+            </a>
         </div>
-
-        <!-- Títulos -->
-        <h1 class="text-3xl font-mono uppercase tracking-widest text-white mb-2">Reserva<br><span class="text-cyber">Confirmada</span></h1>
-        
-        <p class="text-gray-400 text-sm mb-8">
-            Tu auditoría ha sido agendada con éxito. Hemos enviado un correo electrónico con los detalles y el enlace para nuestra reunión.
-        </p>
-
-        <!-- Recibo / ID de Operación -->
-        <div class="bg-gray-950 border border-gray-800 rounded-lg p-4 mb-8 text-left font-mono text-sm">
-            <div class="flex justify-between border-b border-gray-800 pb-2 mb-2">
-                <span class="text-gray-500">ID de Operación:</span>
-                <span class="text-cyber" id="orderId">Cargando...</span>
-            </div>
-            <div class="flex justify-between">
-                <span class="text-gray-500">Estado de red:</span>
-                <span class="text-green-500 flex items-center">
-                    <span class="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
-                    Seguro
-                </span>
-            </div>
-        </div>
-
-        <!-- Botón Volver (Shimmer) -->
-        <a href="index.html" class="w-full group/button relative inline-flex items-center justify-center overflow-hidden rounded-md bg-cyber/20 backdrop-blur-lg px-6 py-4 text-sm font-mono uppercase tracking-widest font-bold text-white transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-xl hover:shadow-cyber/50 border border-white/10 hover:border-cyber/50">
-            <span>Volver al Inicio</span>
-            <div class="absolute inset-0 flex h-full w-full justify-center [transform:skew(-13deg)_translateX(-100%)] group-hover/button:duration-1000 group-hover/button:[transform:skew(-13deg)_translateX(100%)]">
-                <div class="relative h-full w-12 bg-white/30"></div>
-            </div>
-        </a>
     </div>
 
-    <!-- Script para generar un ID aleatorio -->
+    <!-- Scripts Intactos -->
     <script>
-        // Genera un código aleatorio estilo "BK-A8F9X2" para que parezca una operación de servidor real
         window.onload = function() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let id = 'BK-';
-            for (let i = 0; i < 6; i++) {
-                id += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            document.getElementById('orderId').innerText = id;
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; let id = 'BK-';
+            for (let i = 0; i < 6; i++) id += chars.charAt(Math.floor(Math.random() * chars.length));
+            const orderEl = document.getElementById('orderId'); if (orderEl) orderEl.innerText = id;
         }
+        document.addEventListener("DOMContentLoaded", function() {
+            const params = new URLSearchParams(window.location.search);
+            const total = params.get('total'), servicios = params.get('servicios');
+            if (total !== null) {
+                document.getElementById('resumen-total').textContent = '$' + Number(total).toLocaleString('es-CL');
+                document.getElementById('resumen-servicios').textContent = servicios || 'No especificado';
+                document.getElementById('resumen-compra').classList.remove('hidden');
+                document.getElementById('input-monto').value = total;
+                document.getElementById('input-servicios').value = servicios || '';
+            }
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('config.json').then(r => r.json()).then(config => {
+                const form = document.getElementById('formulario-compra');
+                if (form) { form.setAttribute('hx-post', `${config.apiUrl}/contacto/procesar_pago`); htmx.process(form); }
+            }).catch(e => console.error(e));
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const DURACION = 60 * 60 * 1000, KEY = 'bk_payment_deadline';
+            let deadline = parseInt(localStorage.getItem(KEY), 10);
+            if (!deadline || isNaN(deadline) || deadline < Date.now()) { deadline = Date.now() + DURACION; localStorage.setItem(KEY, deadline.toString()); }
+            const textoEl = document.getElementById('temporizador-texto'), cajaEl = document.getElementById('temporizador-reserva');
+            function actualizar() {
+                const ms = deadline - Date.now();
+                if (ms <= 0) {
+                    textoEl.textContent = '00:00'; cajaEl.className = 'mt-8 bg-red-950/50 border border-red-600/40 rounded-xl p-4 font-mono';
+                    const btn = document.querySelector('#formulario-compra button'); if (btn) { btn.disabled = true; btn.textContent = 'CUPO LIBERADO'; }
+                    return;
+                }
+                const m = Math.floor((ms/1000)/60), s = Math.floor(ms/1000)%60;
+                textoEl.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+                if(ms <= 300000) textoEl.classList.add('animate-pulse');
+            }
+            actualizar(); setInterval(actualizar, 1000);
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const btnC = document.getElementById('tab-btn-compra'), btnR = document.getElementById('tab-btn-recibo');
+            const tabC = document.getElementById('tab-compra'), tabR = document.getElementById('tab-recibo');
+            function showC() { tabC.classList.remove('hidden'); tabR.classList.add('hidden'); btnC.classList.replace('bg-dark/50','bg-cyber/20'); btnC.classList.replace('text-gray-500','text-white'); btnR.classList.replace('bg-cyber/20','bg-dark/50'); btnR.classList.replace('text-white','text-gray-500'); }
+            function showR() { tabR.classList.remove('hidden'); tabC.classList.add('hidden'); btnR.classList.replace('bg-dark/50','bg-cyber/20'); btnR.classList.replace('text-gray-500','text-white'); btnC.classList.replace('bg-cyber/20','bg-dark/50'); btnC.classList.replace('text-white','text-gray-500'); }
+            btnC.addEventListener('click', showC); btnR.addEventListener('click', showR); window.__mostrarRecibo = showR;
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const params = new URLSearchParams(window.location.search);
+            document.getElementById('recibo-fecha').textContent = new Date().toLocaleString('es-CL');
+            document.getElementById('recibo-servicios').textContent = params.get('servicios') || 'No especificado';
+            document.getElementById('recibo-total').textContent = '$' + Number(params.get('total') || 0).toLocaleString('es-CL');
+            new MutationObserver((m, o) => { const text = document.getElementById('orderId').innerText; if(text && text !== 'Generando...') { document.getElementById('recibo-orden').textContent = text; o.disconnect(); } }).observe(document.getElementById('orderId'), {childList:true});
+            const form = document.getElementById('formulario-compra');
+            form.addEventListener('htmx:afterRequest', function(e) {
+                document.getElementById('recibo-email').textContent = form.querySelector('[name="correo"]').value || '-';
+                const tarj = form.querySelector('[name="tarjeta"]').value; document.getElementById('recibo-tarjeta').textContent = tarj ? '**** **** **** ' + tarj.replace(/\D/g, '').slice(-4) : '-';
+                const est = document.getElementById('recibo-estado'), av = document.getElementById('recibo-aviso');
+                if (e.detail.successful) {
+                    est.textContent = 'Pagado'; est.className = 'text-xs font-bold uppercase px-2 py-1 rounded bg-green-500/10 text-green-400 border border-green-500/30';
+                    av.textContent = 'Pago confirmado. Guarda este recibo.'; if (window.__mostrarRecibo) window.__mostrarRecibo();
+                } else {
+                    est.textContent = 'Rechazado'; est.className = 'text-xs font-bold uppercase px-2 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/30';
+                    av.textContent = 'Error al procesar el pago.';
+                }
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const btn = document.getElementById('btn-descargar-recibo');
+            if(btn) btn.addEventListener('click', function() {
+                const el = document.getElementById('tab-recibo'); const wasHidden = el.classList.contains('hidden');
+                if(wasHidden) el.classList.remove('hidden');
+                btn.style.display = 'none';
+                html2pdf().set({filename: `recibo-${document.getElementById('recibo-orden').textContent.trim()}.pdf`, html2canvas: { scale: 2, backgroundColor: '#0a0a0a' }}).from(el).save().then(() => {
+                    btn.style.display = ''; if(wasHidden) el.classList.add('hidden');
+                });
+            });
+        });
     </script>
 </body>
 </html>

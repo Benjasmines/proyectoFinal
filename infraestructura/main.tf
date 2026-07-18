@@ -19,7 +19,6 @@ resource "aws_ecr_repository" "app" {
 
 resource "null_resource" "docker_push" {
   triggers = {
-    # Si cambia el HTML renderizado o la configuración de la API, se dispara la subida.
     html_change   = local_file.html_renderizado.id
     config_change = local_file.api_config.id
   }
@@ -49,7 +48,7 @@ module "vpc" {
     private_subnets = [var.subnet_cidr_3, var.subnet_cidr_4]
 
     enable_nat_gateway   = true
-    single_nat_gateway   = true # Un solo NAT para ambas subredes (ahorra costos)
+    single_nat_gateway   = true 
     enable_dns_hostnames = true
     enable_dns_support   = true
 
@@ -61,7 +60,6 @@ module "vpc" {
 # ============================================================
 # SECURITY GROUP
 # ============================================================
-# SG del ALB — acepta HTTP desde internet
 resource "aws_security_group" "alb" {
     name        = "${var.project_name}-alb-sg"
     description = "Permite HTTP entrante desde internet al ALB"
@@ -86,7 +84,6 @@ resource "aws_security_group" "alb" {
     tags = { Name = "${var.project_name}-alb-sg" }
 }
 
-# SG de ECS — solo acepta tráfico proveniente del ALB
 resource "aws_security_group" "ecs" {
     name        = "${var.project_name}-ecs-sg"
     description = "Permite trafico al contenedor solo desde el ALB"
@@ -251,19 +248,18 @@ resource "aws_appautoscaling_policy" "ecs_cpu_policy" {
     predefined_metric_specification {
       predefined_metric_type = "ECSServiceAverageCPUUtilization"
     }
-    target_value = 75.0 # Agrega más contenedores si el CPU supera el 75%
+    target_value = 75.0 
   }
 }
 
 # ============================================================
-# ALMACENAMIENTO DE DATOS (S3)
+# ALMACENAMIENTO DE DATOS (S3) Y PERMISOS LAMBDA
 # ============================================================
-# 1. Bucket S3 para guardar los datos de contacto y reserva
 resource "aws_s3_bucket" "contact_data" {
   bucket = "${var.project_name}-contactos-${data.aws_caller_identity.current.account_id}"
+  force_destroy = true
 }
 
-# 2. Rol IAM para la Lambda de Contactos/Reservas
 resource "aws_iam_role" "lambda_exec" {
   name = "${var.project_name}-lambda-role"
   assume_role_policy = jsonencode({
@@ -272,12 +268,13 @@ resource "aws_iam_role" "lambda_exec" {
   })
 }
 
+# CORRECCIÓN AQUÍ: Se añade s3:HeadObject para evitar el error 403 al verificar disponibilidad
 resource "aws_iam_role_policy" "lambda_s3_policy" {
   role = aws_iam_role.lambda_exec.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Action   = ["s3:PutObject"],
+      Action   = ["s3:PutObject", "s3:HeadObject"],
       Effect   = "Allow",
       Resource = "${aws_s3_bucket.contact_data.arn}/*"
     }]
@@ -285,9 +282,8 @@ resource "aws_iam_role_policy" "lambda_s3_policy" {
 }
 
 # ============================================================
-# 3. LAMBDA — FORMULARIO DE CONTACTO Y RESERVAS (UNIFICADO)
+# LAMBDAS Y API GATEWAY
 # ============================================================
-# Empaquetamos el código de contacto en tiempo real
 data "archive_file" "zip_contacto" {
   type        = "zip"
   source_file = "${path.module}/backend/contacto.py" 
@@ -299,8 +295,6 @@ resource "aws_lambda_function" "contact_handler" {
   role             = aws_iam_role.lambda_exec.arn
   handler          = "contacto.lambda_handler"
   runtime          = "python3.9"
-
-  # Usamos el zip dinámico
   filename         = data.archive_file.zip_contacto.output_path
   source_code_hash = data.archive_file.zip_contacto.output_base64sha256
 
@@ -309,9 +303,6 @@ resource "aws_lambda_function" "contact_handler" {
   }
 }
 
-# ============================================================
-# 4. API GATEWAY 
-# ============================================================
 resource "aws_apigatewayv2_api" "http_api" {
   name          = "${var.project_name}-api"
   protocol_type = "HTTP"
@@ -319,33 +310,35 @@ resource "aws_apigatewayv2_api" "http_api" {
   cors_configuration {
     allow_origins = ["*"]
     allow_methods = ["POST", "GET", "OPTIONS"]
-    allow_headers = ["content-type", "authorization"] 
+    allow_headers = ["*"] 
     max_age       = 300                               
   }
 }
 
-# -> Integración de la Lambda Principal con API Gateway
 resource "aws_apigatewayv2_integration" "lambda_integration" {
   api_id           = aws_apigatewayv2_api.http_api.id
   integration_type = "AWS_PROXY"
   integration_uri  = aws_lambda_function.contact_handler.invoke_arn
 }
 
-# -> Ruta 1: POST /contacto
+resource "aws_apigatewayv2_stage" "default" {
+  api_id      = aws_apigatewayv2_api.http_api.id
+  name        = "$default"
+  auto_deploy = true 
+}
+
 resource "aws_apigatewayv2_route" "post_contacto" {
   api_id    = aws_apigatewayv2_api.http_api.id
-  route_key = "POST /contacto"
+  route_key = "ANY /contacto"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
-# -> Ruta 3: POST /reserva (NUEVO: Dirigido al mismo controlador de Lambda)
 resource "aws_apigatewayv2_route" "post_reserva" {
   api_id    = aws_apigatewayv2_api.http_api.id
-  route_key = "POST /reserva"
+  route_key = "ANY /reserva"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
-# -> Permisos para que API Gateway pueda invocar a la Lambda Principal
 resource "aws_lambda_permission" "api_gw" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.contact_handler.function_name
@@ -353,17 +346,13 @@ resource "aws_lambda_permission" "api_gw" {
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
 }
 
-# ============================================================
-# 5. LAMBDA Y API GATEWAY — AMENAZAS EN TIEMPO REAL
-# ============================================================
-# -> Empaquetamos el código de amenazas
+# AMENAZAS EN TIEMPO REAL
 data "archive_file" "zip_amenazas" {
   type        = "zip"
   source_file = "${path.module}/backend/lambda_amenazas.py"
   output_path = "${path.module}/backend/lambda_amenazas.zip"
 }
 
-# -> Rol básico para la Lambda de Amenazas
 resource "aws_iam_role" "rol_para_lambda" {
   name = "${var.project_name}-rol-amenazas"
   assume_role_policy = jsonencode({
@@ -381,20 +370,16 @@ resource "aws_iam_role_policy_attachment" "permisos_basicos_lambda" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# -> Función Lambda de Amenazas
 resource "aws_lambda_function" "lambda_amenazas" {
   function_name = "${var.project_name}-api-amenazas"
-  
   filename         = data.archive_file.zip_amenazas.output_path
   source_code_hash = data.archive_file.zip_amenazas.output_base64sha256
-
   handler = "lambda_amenazas.lambda_handler" 
   runtime = "python3.10" 
   timeout = 10 
   role    = aws_iam_role.rol_para_lambda.arn 
 }
 
-# -> Ruta 2: GET /amenazas
 resource "aws_apigatewayv2_integration" "integracion_amenazas" {
   api_id           = aws_apigatewayv2_api.http_api.id
   integration_type = "AWS_PROXY"
@@ -414,8 +399,119 @@ resource "aws_lambda_permission" "permiso_api_gateway_amenazas" {
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
 }
 
-# ============================================================
-# ARCHIVO DE CONFIGURACIÓN AUTOMÁTICO (SITIO WEB)
+# PROCESAR PAGO
+data "archive_file" "zip_procesar_pago" {
+  type        = "zip"
+  source_file = "${path.module}/backend/procesar_pago.py"
+  output_path = "${path.module}/backend/lambda_procesar_pago.zip"
+}
+
+resource "aws_lambda_function" "procesar_pago" {
+  function_name = "${var.project_name}-procesar-pago"
+  filename         = data.archive_file.zip_procesar_pago.output_path
+  source_code_hash = data.archive_file.zip_procesar_pago.output_base64sha256
+  handler = "procesar_pago.lambda_handler"
+  runtime = "python3.10"
+  timeout = 10
+  role    = aws_iam_role.rol_para_lambda.arn 
+}
+
+resource "aws_apigatewayv2_integration" "integracion_procesar_pago" {
+  api_id           = aws_apigatewayv2_api.http_api.id
+  integration_type = "AWS_PROXY"
+  integration_uri  = aws_lambda_function.procesar_pago.invoke_arn
+}
+
+resource "aws_apigatewayv2_route" "ruta_procesar_pago" {
+  api_id    = aws_apigatewayv2_api.http_api.id
+  route_key = "ANY /contacto/procesar_pago"
+  target    = "integrations/${aws_apigatewayv2_integration.integracion_procesar_pago.id}"
+}
+
+resource "aws_lambda_permission" "permiso_api_gateway_procesar_pago" {
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.procesar_pago.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
+}
+
+# ADMIN DASHBOARD 
+data "archive_file" "zip_admin_dashboard" {
+  type        = "zip"
+  source_file = "${path.module}/backend/admin_dashboard.py"
+  output_path = "${path.module}/backend/lambda_admin_dashboard.zip"
+}
+
+resource "aws_iam_role" "lambda_admin_dashboard" {
+  name = "${var.project_name}-admin-dashboard-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action    = "sts:AssumeRole"
+      Effect    = "Allow"
+      Principal = { Service = "lambda.amazonaws.com" }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "admin_dashboard_basic_logs" {
+  role       = aws_iam_role.lambda_admin_dashboard.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy" "admin_dashboard_s3_read" {
+  role = aws_iam_role.lambda_admin_dashboard.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = ["s3:GetObject", "s3:HeadObject"],
+        Effect   = "Allow",
+        Resource = "${aws_s3_bucket.contact_data.arn}/*"
+      },
+      {
+        Action   = ["s3:ListBucket"],
+        Effect   = "Allow",
+        Resource = aws_s3_bucket.contact_data.arn
+      }
+    ]
+  })
+}
+
+resource "aws_lambda_function" "admin_dashboard" {
+  function_name = "${var.project_name}-admin-dashboard"
+  filename         = data.archive_file.zip_admin_dashboard.output_path
+  source_code_hash = data.archive_file.zip_admin_dashboard.output_base64sha256
+  handler = "admin_dashboard.lambda_handler"
+  runtime = "python3.10"
+  timeout = 10
+  role    = aws_iam_role.lambda_admin_dashboard.arn
+
+  environment {
+    variables = { BUCKET_NAME = aws_s3_bucket.contact_data.bucket }
+  }
+}
+
+resource "aws_apigatewayv2_integration" "integracion_admin_dashboard" {
+  api_id           = aws_apigatewayv2_api.http_api.id
+  integration_type = "AWS_PROXY"
+  integration_uri  = aws_lambda_function.admin_dashboard.invoke_arn
+}
+
+resource "aws_apigatewayv2_route" "ruta_admin_reservas" {
+  api_id    = aws_apigatewayv2_api.http_api.id
+  route_key = "GET /admin/reservas"
+  target    = "integrations/${aws_apigatewayv2_integration.integracion_admin_dashboard.id}"
+}
+
+resource "aws_lambda_permission" "permiso_api_gateway_admin_dashboard" {
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.admin_dashboard.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
+}
+
+# CONFIGURACIÓN AUTOMÁTICA
 # ============================================================
 resource "local_file" "api_config" {
     filename = "${path.module}/../sitio-web/config.json" 

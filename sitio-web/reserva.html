@@ -1,5 +1,6 @@
+
 <!doctype html>
-<html lang="es" class="dark">
+<html lang="es" class="dark scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,34 +8,53 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    
     <script>
       tailwind.config = {
-        darkMode: "class",
         theme: {
           extend: {
             colors: {
-              cyber: "#dc2626", // Rojo ByteKnight
-              dark: "#030712",
+              terminal: "#00ff41",
+              dark: "#0a0a0a",
+              cyber: "#ff0000",
+            },
+            fontFamily: {
+              mono: ["JetBrains Mono", "monospace"],
+              sans: ["Inter", "sans-serif"],
             },
           },
         },
       };
     </script>
+    <style>
+      .glass {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .glow:hover {
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+        transition: 0.3s;
+      }
+      select option {
+        background: #1a1a1a;
+        color: white;
+      }
+    </style>
 
     <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
   </head>
-  <body
-    class="min-h-screen bg-gray-950 text-gray-100 py-12 px-4 sm:px-6 lg:px-8 font-sans bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')]"
-  >
-    <div
-      class="max-w-4xl mx-auto bg-gray-900 rounded-2xl border border-white/10 shadow-2xl overflow-hidden p-6 md:p-10 backdrop-blur-xl"
-    >
+  <body class="min-h-screen bg-dark text-gray-300 py-12 px-4 sm:px-6 lg:px-8 font-sans">
+    <div class="max-w-4xl mx-auto glass rounded-2xl shadow-2xl overflow-hidden p-6 md:p-10">
+      
       <!-- ENCABEZADO -->
       <div class="text-center mb-10">
-        <h2
-          class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-400 font-mono tracking-wider uppercase"
-        >
+        <h2 class="text-3xl font-extrabold text-white font-mono tracking-wider uppercase">
           Agendar Auditoría Premium
         </h2>
         <p class="mt-2 text-sm text-gray-400 font-mono">
@@ -42,59 +62,203 @@
         </p>
       </div>
 
-      <!-- PANEL DE AMENAZAS EN TIEMPO REAL (HTMX DINÁMICO) -->
-      <div
-        class="bg-gray-950/50 p-6 rounded-xl border border-white/5 relative overflow-hidden shadow-inner"
-      >
-        <div class="absolute top-0 left-0 w-1 h-full bg-cyber"></div>
+      <!-- FORMULARIO DE RESERVA NATIVA -->
+      <div class="bg-white/5 p-8 rounded-2xl border border-white/5 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyber to-transparent opacity-50"></div>
+        
+        <!-- Contenedor para recibir la respuesta de la reserva vía HTMX -->
+        <div id="reserva-respuesta" class="mb-6 font-mono text-xs"></div>
 
-        <h3
-          class="text-lg font-mono font-bold text-white mb-6 flex items-center"
-        >
-          <span class="animate-pulse mr-2 text-cyber">🚨</span>
-          MONITOR GLOBAL DE AMENAZAS RECIENTES
-        </h3>
-
-        <!-- Contenedor con ID para ser llenado dinámicamente -->
-        <div id="monitor-contenido">
-          <!-- Esqueleto de carga inicial -->
-          <div class="animate-pulse flex space-x-4">
-            <div class="flex-1 space-y-4 py-1">
-              <div class="h-4 bg-gray-800 rounded w-3/4"></div>
-              <div class="h-4 bg-gray-800 rounded w-1/2"></div>
-              <div class="h-4 bg-gray-800 rounded w-5/6"></div>
+        <form id="formulario-reserva"
+              hx-target="#reserva-respuesta"
+              hx-swap="innerHTML"
+              class="space-y-6"
+              hx-on::after-request="if(event.detail.successful) setTimeout(() => { redirigirAPurchases(); }, 3000)">
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-xs font-mono text-gray-500 mb-2 uppercase">Operador / Nombre</label>
+              <input type="text" name="nombre" required
+                     pattern="[A-Za-zÁÉÍÓÚÜáéíóúüÑñ\s'\-]+"
+                     title="Solo letras, tildes, ñ, espacios y guion"
+                     class="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-cyber transition"
+                     placeholder="Operator_User" />
+            </div>
+            <div>
+              <label class="block text-xs font-mono text-gray-500 mb-2 uppercase">Email de Respuesta</label>
+              <input type="email" name="email" required
+                     class="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-cyber transition"
+                     placeholder="secure@email.com" />
             </div>
           </div>
-        </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-xs font-mono text-gray-500 mb-2 uppercase">Selecciona el Día</label>
+              <input type="date" id="fecha-reserva" name="fecha" required
+                     class="w-full bg-white/5 border border-white/10 rounded p-3 text-gray-300 focus:outline-none focus:border-cyber transition cursor-pointer" />
+            </div>
+            <div>
+              <label class="block text-xs font-mono text-gray-500 mb-2 uppercase">Bloque de Hora (CLST)</label>
+              <select name="hora" required
+                      class="w-full bg-white/5 border border-white/10 rounded p-3 text-gray-400 focus:outline-none focus:border-cyber transition cursor-pointer">
+                <option value="">-- Elige una hora --</option>
+                <option value="09:00">09:00 AM</option>
+                <option value="11:00">11:00 AM</option>
+                <option value="14:00">02:00 PM</option>
+                <option value="16:00">04:00 PM</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-mono text-gray-500 mb-3 uppercase">Tipo de Servicio <span class="text-gray-600 normal-case">(elige uno o varios)</span></label>
+            <div id="servicios-grupo" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label class="flex items-center justify-between gap-3 bg-white/5 border border-white/10 rounded p-3 cursor-pointer hover:border-cyber/50 transition has-[:checked]:border-cyber has-[:checked]:bg-cyber/10">
+                <span class="flex items-center gap-3">
+                  <input type="checkbox" name="servicios" value="Pentesting Avanzado" data-price="450000" class="accent-cyber w-4 h-4 servicio-check">
+                  <span class="text-sm text-gray-300 font-mono">Pentesting Avanzado</span>
+                </span>
+                <span class="text-xs text-cyber font-mono whitespace-nowrap">$450.000</span>
+              </label>
+              <label class="flex items-center justify-between gap-3 bg-white/5 border border-white/10 rounded p-3 cursor-pointer hover:border-cyber/50 transition has-[:checked]:border-cyber has-[:checked]:bg-cyber/10">
+                <span class="flex items-center gap-3">
+                  <input type="checkbox" name="servicios" value="Análisis de Código" data-price="350000" class="accent-cyber w-4 h-4 servicio-check">
+                  <span class="text-sm text-gray-300 font-mono">Análisis de Código</span>
+                </span>
+                <span class="text-xs text-cyber font-mono whitespace-nowrap">$350.000</span>
+              </label>
+              <label class="flex items-center justify-between gap-3 bg-white/5 border border-white/10 rounded p-3 cursor-pointer hover:border-cyber/50 transition has-[:checked]:border-cyber has-[:checked]:bg-cyber/10">
+                <span class="flex items-center gap-3">
+                  <input type="checkbox" name="servicios" value="Respuesta a Incidentes" data-price="600000" class="accent-cyber w-4 h-4 servicio-check">
+                  <span class="text-sm text-gray-300 font-mono">Respuesta a Incidentes</span>
+                </span>
+                <span class="text-xs text-cyber font-mono whitespace-nowrap">$600.000</span>
+              </label>
+              <label class="flex items-center justify-between gap-3 bg-white/5 border border-white/10 rounded p-3 cursor-pointer hover:border-cyber/50 transition has-[:checked]:border-cyber has-[:checked]:bg-cyber/10">
+                <span class="flex items-center gap-3">
+                  <input type="checkbox" name="servicios" value="Auditoría Wireless" data-price="250000" class="accent-cyber w-4 h-4 servicio-check">
+                  <span class="text-sm text-gray-300 font-mono">Auditoría Wireless</span>
+                </span>
+                <span class="text-xs text-cyber font-mono whitespace-nowrap">$250.000</span>
+              </label>
+              <label class="flex items-center justify-between gap-3 bg-white/5 border border-white/10 rounded p-3 cursor-pointer hover:border-cyber/50 transition has-[:checked]:border-cyber has-[:checked]:bg-cyber/10">
+                <span class="flex items-center gap-3">
+                  <input type="checkbox" name="servicios" value="Ingeniería Social" data-price="300000" class="accent-cyber w-4 h-4 servicio-check">
+                  <span class="text-sm text-gray-300 font-mono">Ingeniería Social</span>
+                </span>
+                <span class="text-xs text-cyber font-mono whitespace-nowrap">$300.000</span>
+              </label>
+              <label class="flex items-center justify-between gap-3 bg-white/5 border border-white/10 rounded p-3 cursor-pointer hover:border-cyber/50 transition has-[:checked]:border-cyber has-[:checked]:bg-cyber/10">
+                <span class="flex items-center gap-3">
+                  <input type="checkbox" name="servicios" value="Forense Digital" data-price="500000" class="accent-cyber w-4 h-4 servicio-check">
+                  <span class="text-sm text-gray-300 font-mono">Forense Digital</span>
+                </span>
+                <span class="text-xs text-cyber font-mono whitespace-nowrap">$500.000</span>
+              </label>
+            </div>
+            <p id="servicios-error" class="hidden text-cyber text-xs font-mono mt-2">Selecciona al menos un servicio.</p>
+
+            <!-- Total estimado -->
+            <div class="mt-4 flex items-center justify-between bg-white/5 border border-cyber/30 rounded-lg p-4 glass">
+              <span class="text-xs font-mono uppercase text-gray-400">Total Estimado</span>
+              <span id="total-estimado" class="text-xl font-mono font-bold text-cyber">$0</span>
+            </div>
+          </div>
+
+          <button type="submit"
+                  class="w-full relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-[1.02] active:scale-[0.98] group/btn">
+            <span class="absolute inset-0 rounded-xl bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
+            <span class="relative z-10 block w-full px-6 py-4 rounded-xl bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
+              <div class="relative z-10 flex items-center justify-center space-x-2">
+                <span class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white">
+                  Confirmar Reserva Segura
+                </span>
+                <svg class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+            </span>
+          </button>
+        </form>
       </div>
 
       <!-- BOTÓN DE RETROCESO -->
       <div class="mt-10 text-center">
-        <a
-          href="index.html"
-          class="inline-flex items-center space-x-2 text-xs font-mono tracking-widest text-gray-500 hover:text-white transition uppercase"
-        >
+        <a href="index.html" class="inline-flex items-center space-x-2 text-xs font-mono tracking-widest text-gray-500 hover:text-cyber transition uppercase">
           <span>&lt; Abortar Operación y Volver</span>
         </a>
       </div>
     </div>
 
-    <!-- LÓGICA DE CARGA DINÁMICA DE LA URL -->
+    <!-- Scripts Intactos -->
     <script>
-      fetch("config.json")
-        .then((response) => response.json())
-        .then((config) => {
-          const el = document.getElementById("monitor-contenido");
-          // Inyectamos la URL real y activamos HTMX
-          el.setAttribute("hx-get", config.apiUrl + "/amenazas");
-          el.setAttribute("hx-trigger", "load");
-          el.setAttribute("hx-swap", "innerHTML");
-          htmx.process(el);
-        })
-        .catch((err) => {
-          document.getElementById("monitor-contenido").innerHTML =
-            '<p class="text-red-500 font-mono text-sm">Error: No se pudo conectar con el servidor de amenazas.</p>';
+      function formatearCLP(numero) { return '$' + numero.toLocaleString('es-CL'); }
+      function calcularTotal() {
+        const checks = document.querySelectorAll('.servicio-check:checked');
+        let total = 0;
+        checks.forEach(chk => total += Number(chk.dataset.price));
+        document.getElementById('total-estimado').textContent = formatearCLP(total);
+        return total;
+      }
+      function redirigirAPurchases() {
+        const checks = document.querySelectorAll('.servicio-check:checked');
+        const total = calcularTotal();
+        const nombres = Array.from(checks).map(chk => chk.value);
+        const params = new URLSearchParams({ total: total, servicios: nombres.join(', ') });
+        window.location.href = `purchases.html?${params.toString()}`;
+      }
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll('.servicio-check').forEach(chk => {
+          chk.addEventListener('change', calcularTotal);
         });
+      });
+      document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("formulario-reserva");
+        const errorMsg = document.getElementById("servicios-error");
+        form.addEventListener("submit", (e) => {
+          const marcados = form.querySelectorAll('input[name="servicios"]:checked');
+          if (marcados.length === 0) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            errorMsg.classList.remove("hidden");
+          } else {
+            errorMsg.classList.add("hidden");
+          }
+        });
+      });
+      document.addEventListener("DOMContentLoaded", () => {
+        const hoy = new Date().toISOString().split('T')[0];
+        const fechaInput = document.getElementById('fecha-reserva');
+        if (fechaInput) { fechaInput.min = hoy; }
+        fetch("config.json").then((response) => response.json()).then((config) => {
+          const formReserva = document.getElementById("formulario-reserva");
+          if (formReserva) {
+            formReserva.setAttribute("hx-post", `${config.apiUrl}/reserva`);
+            htmx.process(formReserva);
+          }
+        }).catch((err) => {
+          document.getElementById("reserva-respuesta").innerHTML = '<p class="text-cyber font-mono text-sm">Error: No se pudo cargar la configuración del servidor seguro.</p>';
+        });
+      });
+      document.body.addEventListener('htmx:beforeSend', function(event) {
+          console.warn("================ NUEVA PETICIÓN HTMX ================");
+          console.log("[HTMX BEFORE SEND] Destino:", event.detail.requestConfig.path);
+          console.log("[HTMX BEFORE SEND] Datos a enviar:", event.detail.requestConfig.parameters);
+          console.log("[HTMX BEFORE SEND] Cabeceras (Headers):", event.detail.requestConfig.headers);
+      });
+      document.body.addEventListener('htmx:responseError', function(event) {
+          console.error("[HTMX RESPONSE ERROR] El servidor respondió con un error.");
+          console.error("Status HTTP:", event.detail.xhr.status);
+          console.error("Cuerpo de la respuesta:", event.detail.xhr.responseText);
+      });
+      document.body.addEventListener('htmx:sendError', function(event) {
+          console.error("[HTMX SEND ERROR / CORS] Bloqueo de red o CORS. La petición no llegó o el navegador la bloqueó.");
+          console.error("Detalles del evento:", event);
+      });
+      document.body.addEventListener('htmx:afterRequest', function(event) {
+          console.log("[HTMX AFTER REQUEST] Petición finalizada. Status:", event.detail.xhr.status);
+      });
     </script>
   </body>
 </html>
