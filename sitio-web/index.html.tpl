@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="es" class="scroll-smooth">
   <head>
@@ -10,11 +11,13 @@
       rel="stylesheet"
     />
 
+    <!-- HTMX -->
     <script
       src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js"
       integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V"
       crossorigin="anonymous"
     ></script>
+    
     <script>
       tailwind.config = {
         theme: {
@@ -346,6 +349,9 @@
       </div>
     </section>
 
+    <!-- ========================================== -->
+    <!-- CAPACIDADES - Botones apuntan a #reserva   -->
+    <!-- ========================================== -->
     <section id="servicios" class="py-24 px-6 max-w-7xl mx-auto scroll-mt-20">
       <div class="mb-8">
         <h3 class="text-cyber font-mono text-sm mb-2">
@@ -355,315 +361,133 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div
-          class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber"
-        >
+        <!-- Servicio 1 -->
+        <div class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber">
           <div class="flex items-center">
-            <div
-              class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark"
-            >
+            <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark">
               01
             </div>
-            <h4 class="text-xl font-bold text-white mb-6 pl-4">
-              Pentesting Avanzado
-            </h4>
+            <h4 class="text-xl font-bold text-white mb-6 pl-4">Pentesting Avanzado</h4>
           </div>
-
           <p class="text-gray-400 text-sm leading-relaxed mb-6">
-            Simulación de ataques reales para identificar vulnerabilidades
-            críticas en tu red y aplicaciones web.
+            Simulación de ataques reales para identificar vulnerabilidades críticas en tu red y aplicaciones web.
           </p>
-
-          <a
-            href="reserva.html"
-            class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn"
-          >
-            <span
-              class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"
-            ></span>
-            <span
-              class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors"
-            >
+          <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+            <span class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
+            <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
               <div class="relative z-10 flex items-center space-x-2">
-                <span
-                  class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white"
-                >
-                  Solicitar Auditoría
-                </span>
-                <svg
-                  class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber"
-                  data-slot="icon"
-                  aria-hidden="true"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
-                    fill-rule="evenodd"
-                  ></path>
-                </svg>
+                <span class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white">Solicitar Auditoría</span>
+                <svg class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path></svg>
               </div>
             </span>
           </a>
         </div>
 
-        <div
-          class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber"
-        >
+        <!-- Servicio 2 -->
+        <div class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber">
           <div class="flex items-center">
-            <div
-              class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark"
-            >
+            <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark">
               02
             </div>
-            <h4 class="text-xl font-bold text-white mb-6 pl-4">
-              Análisis de Código
-            </h4>
+            <h4 class="text-xl font-bold text-white mb-6 pl-4">Análisis de Código</h4>
           </div>
           <p class="text-gray-400 text-sm leading-relaxed mb-6">
-            Revisión profunda de aplicaciones para asegurar que tu software sea
-            seguro desde la primera línea de código.
+            Revisión profunda de aplicaciones para asegurar que tu software sea seguro desde la primera línea de código.
           </p>
-          <a
-            href="reserva.html"
-            class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn"
-          >
-            <span
-              class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"
-            ></span>
-            <span
-              class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors"
-            >
+          <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+            <span class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
+            <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
               <div class="relative z-10 flex items-center space-x-2">
-                <span
-                  class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white"
-                >
-                  Solicitar Auditoría
-                </span>
-                <svg
-                  class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber"
-                  data-slot="icon"
-                  aria-hidden="true"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
-                    fill-rule="evenodd"
-                  ></path>
-                </svg>
+                <span class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white">Solicitar Auditoría</span>
+                <svg class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path></svg>
               </div>
             </span>
           </a>
         </div>
 
-        <div
-          class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber"
-        >
+        <!-- Servicio 3 -->
+        <div class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber">
           <div class="flex items-center">
-            <div
-              class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark"
-            >
+            <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark">
               03
             </div>
-            <h4 class="text-xl font-bold text-white mb-6 pl-4">
-              Respuesta a Incidentes
-            </h4>
+            <h4 class="text-xl font-bold text-white mb-6 pl-4">Respuesta a Incidentes</h4>
           </div>
           <p class="text-gray-400 text-sm leading-relaxed mb-6">
-            Si has sido comprometido, nuestro equipo de respuesta rápida mitiga
-            el daño y recupera tus activos.
+            Si has sido comprometido, nuestro equipo de respuesta rápida mitiga el daño y recupera tus activos.
           </p>
-          <a
-            href="reserva.html"
-            class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn"
-          >
-            <span
-              class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"
-            ></span>
-            <span
-              class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors"
-            >
+          <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+            <span class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
+            <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
               <div class="relative z-10 flex items-center space-x-2">
-                <span
-                  class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white"
-                >
-                  Solicitar Auditoría
-                </span>
-                <svg
-                  class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber"
-                  data-slot="icon"
-                  aria-hidden="true"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
-                    fill-rule="evenodd"
-                  ></path>
-                </svg>
+                <span class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white">Solicitar Auditoría</span>
+                <svg class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path></svg>
               </div>
             </span>
           </a>
         </div>
 
-        <div
-          class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber"
-        >
+        <!-- Servicio 4 -->
+        <div class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber">
           <div class="flex items-center">
-            <div
-              class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark"
-            >
+            <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark">
               04
             </div>
-            <h4 class="text-xl font-bold text-white mb-6 pl-4">
-              Auditoría Wireless
-            </h4>
+            <h4 class="text-xl font-bold text-white mb-6 pl-4">Auditoría Wireless</h4>
           </div>
           <p class="text-gray-400 text-sm leading-relaxed mb-6">
-            Evaluación de protocolos de cifrado y puntos de acceso para evitar
-            intrusiones a través del perímetro inalámbrico.
+            Evaluación de protocolos de cifrado y puntos de acceso para evitar intrusiones a través del perímetro inalámbrico.
           </p>
-          <a
-            href="reserva.html"
-            class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn"
-          >
-            <span
-              class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"
-            ></span>
-            <span
-              class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors"
-            >
+          <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+            <span class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
+            <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
               <div class="relative z-10 flex items-center space-x-2">
-                <span
-                  class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white"
-                >
-                  Solicitar Auditoría
-                </span>
-                <svg
-                  class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber"
-                  data-slot="icon"
-                  aria-hidden="true"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
-                    fill-rule="evenodd"
-                  ></path>
-                </svg>
+                <span class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white">Solicitar Auditoría</span>
+                <svg class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path></svg>
               </div>
             </span>
           </a>
         </div>
 
-        <div
-          class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber"
-        >
+        <!-- Servicio 5 -->
+        <div class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber">
           <div class="flex items-center">
-            <div
-              class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark"
-            >
+            <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark">
               05
             </div>
-            <h4 class="text-xl font-bold text-white mb-6 pl-4">
-              Ingeniería Social
-            </h4>
+            <h4 class="text-xl font-bold text-white mb-6 pl-4">Ingeniería Social</h4>
           </div>
           <p class="text-gray-400 text-sm leading-relaxed mb-6">
-            Pruebas de concienciación mediante campañas de Phishing controladas
-            para medir el factor humano de seguridad.
+            Pruebas de concienciación mediante campañas de Phishing controladas para medir el factor humano de seguridad.
           </p>
-          <a
-            href="reserva.html"
-            class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn"
-          >
-            <span
-              class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"
-            ></span>
-            <span
-              class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors"
-            >
+          <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+            <span class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
+            <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
               <div class="relative z-10 flex items-center space-x-2">
-                <span
-                  class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white"
-                >
-                  Solicitar Auditoría
-                </span>
-                <svg
-                  class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber"
-                  data-slot="icon"
-                  aria-hidden="true"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
-                    fill-rule="evenodd"
-                  ></path>
-                </svg>
+                <span class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white">Solicitar Auditoría</span>
+                <svg class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path></svg>
               </div>
             </span>
           </a>
         </div>
 
-        <div
-          class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber"
-        >
+        <!-- Servicio 6 -->
+        <div class="glass p-8 rounded-lg group transition duration-300 has-[.btn-trigger:hover]:border-cyber">
           <div class="flex items-center">
-            <div
-              class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark"
-            >
+            <div class="w-12 h-12 bg-cyber/10 text-cyber flex items-center justify-center rounded mb-6 transition duration-300 font-mono text-lg font-bold group-has-[.btn-trigger:hover]:bg-cyber group-has-[.btn-trigger:hover]:text-dark">
               06
             </div>
-            <h4 class="text-xl font-bold text-white mb-6 pl-4">
-              Forense Digital
-            </h4>
+            <h4 class="text-xl font-bold text-white mb-6 pl-4">Forense Digital</h4>
           </div>
           <p class="text-gray-400 text-sm leading-relaxed mb-6">
-            Análisis post-mortem de sistemas comprometidos para identificar el
-            origen, alcance y rastro dejado por atacantes.
+            Análisis post-mortem de sistemas comprometidos para identificar el origen, alcance y rastro dejado por atacantes.
           </p>
-          <a
-            href="reserva.html"
-            class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn"
-          >
-            <span
-              class="absolute inset-0 rounded- bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"
-            ></span>
-            <span
-              class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors"
-            >
+          <a href="reserva.html" class="btn-trigger mt-auto relative inline-block p-px font-semibold leading-6 text-white shadow-2xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 group/btn">
+            <span class="absolute inset-0 rounded bg-gradient-to-r from-cyber via-red-600 to-amber-600 p-[2px] opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100"></span>
+            <span class="relative z-10 block px-6 py-3 rounded bg-cyber border border-white/10 group-hover/btn:border-transparent transition-colors">
               <div class="relative z-10 flex items-center space-x-2">
-                <span
-                  class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white"
-                >
-                  Solicitar Auditoría
-                </span>
-                <svg
-                  class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber"
-                  data-slot="icon"
-                  aria-hidden="true"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
-                    fill-rule="evenodd"
-                  ></path>
-                </svg>
+                <span class="transition-all duration-500 group-hover/btn:translate-x-1 font-mono text-sm uppercase tracking-widest text-gray-300 group-hover/btn:text-white">Solicitar Auditoría</span>
+                <svg class="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-1 text-cyber" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path></svg>
               </div>
             </span>
           </a>
@@ -765,13 +589,14 @@
 
           <div id="form-respuesta" class="mb-6 font-mono text-xs"></div>
 
+          <!-- ========================================================================= -->
+          <!-- ACTUALIZADO: CONTACTO 100% NATIVO (Removido Cal.com y URL estática)       -->
+          <!-- ========================================================================= -->
           <form
-            hx-post="${api_url}/default/contacto"
+            id="formulario-contacto"
             hx-target="#form-respuesta"
             hx-swap="innerHTML"
-            hx-on::after-request="if(event.detail.successful) window.location.href = 'https://cal.com/benjamin-uribe-x4fsna/autoria-biteknite'"
             class="space-y-4"
-            id="formulario-contacto"
           >
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>

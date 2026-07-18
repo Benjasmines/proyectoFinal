@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es" class="dark">
 <head>
@@ -5,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acceso Restringido | ByteKnight</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -21,7 +23,7 @@
 </head>
 <body class="bg-gray-950 text-gray-100 font-sans h-screen w-full overflow-hidden bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')]">
 
-
+    <!-- LOGIN GATEWAY -->
     <div id="loginGateway" class="absolute inset-0 z-50 flex items-center justify-center bg-gray-950/90 backdrop-blur-md transition-opacity duration-500">
         <div class="max-w-sm w-full border border-white/10 bg-gray-900 rounded-xl p-8 shadow-[0_0_40px_rgba(220,38,38,0.15)] relative overflow-hidden mx-4">
             
@@ -55,10 +57,10 @@
         </div>
     </div>
 
-
+    <!-- DASHBOARD -->
     <div id="dashboardContent" class="hidden h-screen w-full flex opacity-0 transition-opacity duration-1000">
         
-        <!-- Sidebar -->
+        <!-- Sidebar Simplificada -->
         <aside class="w-64 bg-gray-950 border-r border-white/10 hidden md:flex flex-col">
             <div class="h-20 flex items-center px-8 border-b border-white/10">
                 <span class="text-xl font-mono uppercase tracking-widest font-bold text-white">
@@ -68,26 +70,21 @@
             
             <nav class="flex-1 px-4 py-8 space-y-2 font-mono text-sm uppercase tracking-wider">
                 <a href="#" class="flex items-center px-4 py-3 bg-cyber/10 text-cyber rounded-lg border border-cyber/30">
-                    Dashboard
-                </a>
-                <a href="#" class="flex items-center px-4 py-3 text-gray-400 hover:text-white rounded-lg transition-colors">
-                    Servicios
-                </a>
-                <a href="#" class="flex items-center px-4 py-3 text-gray-400 hover:text-white rounded-lg transition-colors">
-                    Clientes
+                    Panel de Reservas
                 </a>
             </nav>
 
             <div class="p-4 border-t border-white/10">
-                <button onclick="cerrarSesion()" class="flex items-center px-4 py-2 w-full text-sm font-mono text-gray-500 hover:text-cyber transition-colors">
+                <button onclick="cerrarSesion()" class="flex items-center px-4 py-2 w-full text-sm font-mono text-gray-500 hover:text-cyber hover:bg-white/5 rounded transition-colors">
                     Cerrar Sesión
                 </button>
             </div>
         </aside>
 
+        <!-- Main Content -->
         <main class="flex-1 flex flex-col h-screen overflow-hidden">
             <header class="h-20 border-b border-white/10 bg-gray-900/50 backdrop-blur-md flex items-center justify-between px-8">
-                <h1 class="text-xl font-mono uppercase tracking-widest text-white">Resumen Operativo</h1>
+                <h1 class="text-xl font-mono uppercase tracking-widest text-white">Registro Operativo</h1>
                 <div class="flex items-center space-x-4">
                     <span class="flex h-3 w-3 relative">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber opacity-75"></span>
@@ -98,84 +95,29 @@
             </header>
 
             <div class="flex-1 overflow-y-auto p-8">
-                <h2 class="text-2xl font-mono text-white mb-6">Bienvenido, Admin.</h2>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg relative overflow-hidden">
-                        <div class="absolute top-0 right-0 p-4 opacity-10">
-                            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </div>
-                        <p class="text-gray-400 font-mono text-xs uppercase tracking-wider mb-2">Auditorías Pendientes</p>
-                        <p class="text-4xl font-bold text-white font-mono">03</p>
-                    </div>
+                <!-- Tabla de Reservas -->
+                <div class="glass p-8 rounded-xl border border-white/10 bg-gray-900">
+                    <h3 class="text-2xl font-bold text-white mb-6 font-mono">>_ RESERVAS_RECIBIDAS</h3>
                     
-                    <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg relative overflow-hidden">
-                        <div class="absolute top-0 right-0 p-4 opacity-10">
-                            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </div>
-                        <p class="text-gray-400 font-mono text-xs uppercase tracking-wider mb-2">Sistemas Asegurados</p>
-                        <p class="text-4xl font-bold text-white font-mono">14</p>
-                    </div>
-
-                    <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg relative overflow-hidden">
-                        <div class="absolute top-0 right-0 p-4 opacity-10">
-                            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        </div>
-                        <p class="text-gray-400 font-mono text-xs uppercase tracking-wider mb-2">Carga de Red</p>
-                        <p class="text-4xl font-bold text-cyber font-mono">42%</p>
-                    </div>
-                </div>
-
-                <div class="bg-gray-900 border border-white/10 rounded-xl shadow-lg overflow-hidden">
-                    <div class="p-6 border-b border-white/10 flex justify-between items-center">
-                        <h3 class="font-mono text-lg text-white">Registro de Operaciones</h3>
-                        <button class="text-xs font-mono text-cyber hover:text-white transition-colors border border-cyber/30 hover:bg-cyber/20 px-3 py-1 rounded">
-                            + Nueva Orden
-                        </button>
-                    </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-gray-950/50 border-b border-white/10 text-xs uppercase text-gray-500 font-mono tracking-wider">
-                                    <th class="p-4 font-medium">ID Ref</th>
-                                    <th class="p-4 font-medium">Cliente</th>
-                                    <th class="p-4 font-medium">Tipo de Servicio</th>
-                                    <th class="p-4 font-medium">Estado</th>
-                                    <th class="p-4 font-medium text-right">Acción</th>
+                        <table class="w-full text-left text-sm whitespace-nowrap">
+                            <thead class="text-xs uppercase bg-black/50 text-gray-400 font-mono border-b border-white/10">
+                                <tr>
+                                    <th class="p-4">Timestamp</th>
+                                    <th class="p-4">Operador</th>
+                                    <th class="p-4">Email</th>
+                                    <th class="p-4">Fecha y Hora</th>
+                                    <th class="p-4 text-cyber">Servicios</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-sm font-mono text-gray-300">
-                                <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
-                                    <td class="p-4 text-gray-500">#BK-092</td>
-                                    <td class="p-4 text-white">AquaTech Sur</td>
-                                    <td class="p-4">Auditoría de Red</td>
-                                    <td class="p-4">
-                                        <span class="px-2 py-1 bg-cyber/10 text-cyber border border-cyber/20 rounded text-xs">Pendiente</span>
-                                    </td>
-                                    <td class="p-4 text-right">
-                                        <button class="text-gray-500 hover:text-white transition-colors">Gestionar</button>
-                                    </td>
-                                </tr>
-                                <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
-                                    <td class="p-4 text-gray-500">#BK-091</td>
-                                    <td class="p-4 text-white">BioMarinas SpA</td>
-                                    <td class="p-4">Mantenimiento Servidores</td>
-                                    <td class="p-4">
-                                        <span class="px-2 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded text-xs">Completado</span>
-                                    </td>
-                                    <td class="p-4 text-right">
-                                        <button class="text-gray-500 hover:text-white transition-colors">Revisar</button>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-white/5 transition-colors">
-                                    <td class="p-4 text-gray-500">#BK-090</td>
-                                    <td class="p-4 text-white">Logística Austral</td>
-                                    <td class="p-4">Implementación Firewall</td>
-                                    <td class="p-4">
-                                        <span class="px-2 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded text-xs">En Proceso</span>
-                                    </td>
-                                    <td class="p-4 text-right">
-                                        <button class="text-gray-500 hover:text-white transition-colors">Gestionar</button>
+                            <tbody 
+                                id="tabla-reservas"
+                                hx-trigger="load" 
+                                hx-swap="innerHTML">
+                                <tr>
+                                    <td colspan="5" class="p-6 text-center text-cyber animate-pulse font-mono">
+                                        Obteniendo datos cifrados desde el servidor...
                                     </td>
                                 </tr>
                             </tbody>
@@ -187,8 +129,31 @@
         </main>
     </div>
 
-
     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("../config.json") 
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`No se pudo cargar config.json (Estado: ${response.status})`);
+                    }
+                    return response.json();
+                })
+                .then(config => {
+                    const tbody = document.getElementById("tabla-reservas");
+                    if (tbody) {
+                        tbody.setAttribute("hx-get", config.apiUrl + "/admin/reservas");
+                        htmx.process(tbody);
+                    }
+                })
+                .catch(err => {
+                    console.error("Error de conexión al nodo central:", err);
+                    document.getElementById("tabla-reservas").innerHTML = 
+                        `<tr><td colspan='5' class='p-6 text-center text-red-500 font-mono'>
+                            [!] ERROR: ${err.message}. Asegúrate de que config.json existe en la raíz.
+                        </td></tr>`;
+                });
+        });
+
         function verificarLogin() {
             const user = document.getElementById('adminUser').value;
             const pass = document.getElementById('adminPass').value;
@@ -236,6 +201,5 @@
             }
         });
     </script>
-
 </body>
 </html>

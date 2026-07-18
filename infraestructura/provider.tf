@@ -8,7 +8,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "eticalhacking-s3-bucket" # El nombre que definiste en bootstrap
+    bucket         = "eticalhacking-s3-bucket" # El nombre que se definio en bootstrap
     key            = "infra/terraform.tfstate" # Nombre del archivo de estado
     region         = "us-east-1"
     dynamodb_table = "dynamodb-eticalhacking-locks" # La tabla que creaste
